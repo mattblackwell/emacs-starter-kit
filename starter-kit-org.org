@@ -80,10 +80,10 @@ Speed commands enable single-letter commands in Org-mode files when
 the point is at the beginning of a headline, or at the beginning of a
 code block.
 
-See the `=org-speed-commands-default=' variable for a list of the keys
+See the =org-speed-commands-default= variable for a list of the keys
 and commands enabled at the beginning of headlines.  All code blocks
 are available at the beginning of a code block, the following key
-sequence =C-c C-v h= (bound to `=org-babel-describe-bindings=') will
+sequence =C-c C-v h= (bound to =org-babel-describe-bindings=) will
 display a list of the code blocks commands and their related keys.
 
 #+begin_src emacs-lisp
@@ -93,8 +93,8 @@ display a list of the code blocks commands and their related keys.
 ** Code blocks
 This activates a number of widely used languages, you are encouraged
 to activate more languages using the customize interface for the
-`=org-babel-load-languages=' variable, or with an elisp form like the
-one below.  The customize interface of `=org-babel-load-languages='
+=org-babel-load-languages= variable, or with an elisp form like the
+one below.  The customize interface of =org-babel-load-languages=
 contains an up to date list of the currently supported languages.
 #+begin_src emacs-lisp
   (org-babel-do-load-languages
@@ -126,6 +126,11 @@ although it is not added by default as a security precaution.
 #+begin_src emacs-lisp :tangle no
   (setq org-confirm-babel-evaluate nil)
 #+end_src
+
+** Code block fontification
+   :PROPERTIES:
+   :CUSTOM_ID: code-block-fontification
+   :END:
 
 The following displays the contents of code blocks in Org-mode files
 using the major-mode of the code.  It also changes the behavior of
@@ -161,21 +166,4 @@ Org-mode manual is available to the =info= command (bound to =C-h i=).
               Info-directory-list))
 #+end_src
 
-** Starter Kit Documentation
-This code defines the =starter-kit-project= which is used to publish
-the documentation for the Starter Kit to html.
-
-#+begin_src emacs-lisp :results silent :tangle no
-  (unless (boundp 'org-publish-project-alist)
-    (setq org-publish-project-alist nil))
-  (let ((this-dir (file-name-directory (or load-file-name buffer-file-name))))
-    (add-to-list 'org-publish-project-alist
-                 `("starter-kit-documentation"
-                   :base-directory ,this-dir
-                   :base-extension "org"
-                   :style "<link rel=\"stylesheet\" href=\"emacs.css\" type=\"text/css\"/>"
-                   :publishing-directory ,this-dir
-                   :index-filename "starter-kit.org"
-                   :auto-postamble nil)))
-#+end_src
 

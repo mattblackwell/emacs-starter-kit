@@ -29,7 +29,7 @@ Function definitions
 ** Buffer-related
 
 #+srcname: starter-kit-ido-imenu
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle no
   (defun ido-imenu ()
     "Update the imenu index and then use ido to select a symbol to navigate to.
   Symbols matching the text at point are put first in the completion list."
@@ -102,29 +102,29 @@ a lambda doesn't already exist in the list.
 
 #+srcname: starter-kit-add-local-column-number-mode
 #+begin_src emacs-lisp 
-(add-hook 'coding-hook 'local-column-number-mode)
+(add-hook 'starter-kit-coding-hook 'local-column-number-mode)
 #+end_src
 
 #+srcname: start-kit-add-local-comment-auto-fill
 #+begin_src emacs-lisp 
-(add-hook 'coding-hook 'local-comment-auto-fill)
+(add-hook 'starter-kit-coding-hook 'local-comment-auto-fill)
 #+end_src
 
 #+srcname: starter-kit-add-hl-line-mode
 #+begin_src emacs-lisp :tangle no
-(add-hook 'coding-hook 'turn-on-hl-line-mode)
+(add-hook 'starter-kit-coding-hook 'turn-on-hl-line-mode)
 #+end_src
 
 #+srcname: starter-kit-add-pretty-lambdas
 #+begin_src emacs-lisp
-(add-hook 'coding-hook 'pretty-lambdas)
+(add-hook 'starter-kit-coding-hook 'starter-kit-pretty-lambdas)
 #+end_src
   
-#+srcname: starter-kit-run-coding-hook
+#+srcname: starter-kit-run-starter-kit-coding-hook
 #+begin_src emacs-lisp 
-(defun run-coding-hook ()
+(defun run-starter-kit-coding-hook ()
   "Enable things that are convenient across all coding buffers."
-  (run-hooks 'coding-hook))
+  (run-hooks 'starter-kit-coding-hook))
 #+end_src
 
 #+srcname: starter-kit-untabify-buffer
@@ -146,7 +146,7 @@ a lambda doesn't already exist in the list.
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer."
   (interactive)
-  (indent-buffer)
+;;  (indent-buffer)
   (untabify-buffer)
   (delete-trailing-whitespace))
 #+end_src
@@ -175,72 +175,27 @@ a lambda doesn't already exist in the list.
 
 #+srcname: starter-kit-recentf-ido-find-file
 #+begin_src emacs-lisp 
-(defun recentf-ido-find-file ()
-  "Find a recent file using ido."
-  (interactive)
-  (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
-    (when file
-      (find-file file))))
-#+end_src
-
-** Cosmetic
-
-#+srcname: starter-kit-pretty-lambdas
-#+begin_src emacs-lisp 
-(defun pretty-lambdas ()
-  (font-lock-add-keywords
-   nil `(("(?\\(lambda\\>\\)"
-          (0 (progn (compose-region (match-beginning 1) (match-end 1)
-                                    ,(make-char 'greek-iso8859-7 107))
-                    nil))))))
+  (defun recentf-ido-find-file () 
+    "Find a recent file using Ido." 
+    (interactive) 
+    (let* ((file-assoc-list 
+            (mapcar (lambda (x) 
+                      (cons (file-name-nondirectory x) 
+                            x)) 
+                    recentf-list)) 
+           (filename-list 
+            (remove-duplicates (mapcar #'car file-assoc-list) 
+                               :test #'string=)) 
+           (filename (ido-completing-read "Choose recent file: " 
+                                          filename-list 
+                                          nil 
+                                          t))) 
+      (when filename 
+        (find-file (cdr (assoc filename 
+                               file-assoc-list)))))) 
 #+end_src
 
 ** Other
-
-#+srcname: starter-kit-other-functions
-#+begin_src emacs-lisp 
-  (defun eval-and-replace ()
-    "Replace the preceding sexp with its value."
-    (interactive)
-    (backward-kill-sexp)
-    (condition-case nil
-        (prin1 (eval (read (current-kill 0)))
-               (current-buffer))
-      (error (message "Invalid expression")
-             (insert (current-kill 0)))))
-  
-  (defun recompile-init ()
-    "Byte-compile all your dotfiles again."
-    (interactive)
-    (byte-recompile-directory dotfiles-dir 0)
-    ;; TODO: remove elpa-to-submit once everything's submitted.
-    (byte-recompile-directory (concat dotfiles-dir "elpa-to-submit/" 0)))
-  
-  (defun regen-autoloads (&optional force-regen)
-    "Regenerate the autoload definitions file if necessary and load it."
-    (interactive "P")
-    (let ((autoload-dir (concat dotfiles-dir "/elpa-to-submit"))
-          (generated-autoload-file autoload-file))
-      (when (or force-regen
-                (not (file-exists-p autoload-file))
-                (some (lambda (f) (file-newer-than-file-p f autoload-file))
-                      (directory-files autoload-dir t "\\.el$")))
-        (message "Updating autoloads...")
-        (let (emacs-lisp-mode-hook)
-          (update-directory-autoloads autoload-dir))))
-    (load autoload-file))
-#+end_src
-
-TODO: fix this
-#+srcname: starter-kit-sudo-edit
-#+begin_src emacs-lisp 
-(defun sudo-edit (&optional arg)
-  (interactive "p")
-  (if arg
-      (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
-    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
-#+end_src
-
 Useful when a large block of text is required (e.g. for testing)
 #+srcname: starter-kit-lorem
 #+begin_src emacs-lisp 
@@ -256,38 +211,3 @@ Useful when a large block of text is required (e.g. for testing)
           "culpa qui officia deserunt mollit anim id est laborum."))
 #+end_src
 
-#+srcname: starter-kit-switch-or-start
-#+begin_src emacs-lisp 
-(defun switch-or-start (function buffer)
-  "If the buffer is current, bury it, otherwise invoke the function."
-  (if (equal (buffer-name (current-buffer)) buffer)
-      (bury-buffer)
-    (if (get-buffer buffer)
-        (switch-to-buffer buffer)
-      (funcall function))))
-#+end_src
-
-#+srcname: starter-kit-insert-date
-#+begin_src emacs-lisp 
-(defun insert-date ()
-  "Insert a time-stamp according to locale's date and time format."
-  (interactive)
-  (insert (format-time-string "%c" (current-time))))
-#+end_src
-
-#+srcname: starter-kit-pairing-bot
-#+begin_src emacs-lisp 
-(defun pairing-bot ()
-  "If you can't pair program with a human, use this instead."
-  (interactive)
-  (message (if (y-or-n-p "Do you have a test for that? ") "Good." "Bad!")))
-#+end_src
-
-A monkeypatch to cause annotate to ignore whitespace
-
-#+srcname: starter-kit-vc-git-annotate-command
-#+begin_src emacs-lisp 
-(defun vc-git-annotate-command (file buf &optional rev)
-  (let ((name (file-relative-name file)))
-    (vc-git-command buf 0 name "blame" "-w" rev)))
-#+end_src

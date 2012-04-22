@@ -6,33 +6,32 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 * Starter Kit Misc
 Things that don't fit anywhere else.
 
-** Color Themes
-The [[http://www.nongnu.org/color-theme/][Color Themes]] package provides support for changing, saving,
-sharing Emacs color themes.  To view and apply color themes available
-on your system run =M-x color-theme-select=.  See the color theme
-website and EmacsWiki pages for more information.
-- http://www.nongnu.org/color-theme/
-- http://www.emacswiki.org/emacs/ColorTheme
+** Check Dependencies
 
-This following loads color-theme so that it is available by default.
+Determine whether required packages are installed. If not, use ELPA to
+install them. Other dependencies are provided by Emacs 24.
 #+begin_src emacs-lisp
-  (add-to-list 'load-path
-               (expand-file-name "color-theme"
-                                 (expand-file-name "src" dotfiles-dir)))
-  (require 'color-theme)
-  (eval-after-load "color-theme"
-    '(progn
-       (color-theme-initialize)))
+  (dolist (package '(magit))
+    (unless (package-installed-p package)
+      (package-install package)))
 #+end_src
 
-Once you've selected a preferred color theme it can be installed by
-adding its function to your initialization.  For example
-#+begin_src emacs-lisp :tangle no
-  (color-theme-railscasts)
-#+end_src
-will load the =railscasts= color theme when Emacs starts.
+** Color Themes
+Emacs 24 introduces a streamlined theming system that replaces an
+older, messier one. The Starter Kit uses Ethan Schoonover's
+/Solarized/ color theme. Load it with =M-x load-theme solarized-dark=
+or =M-x load-theme solarized-light=. You can also try loading the
+=zenburn-theme= or =tango-2= themes. If this doesn't work first time,
+load it manually with =M-x load-theme solarized-dark=.
 
-** Window system stuff
+#+source: colors
+#+begin_src emacs-lisp
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
+  (setq custom-safe-themes t)
+  (load-theme 'solarized-dark t)
+#+end_src
+
+** Window system 
 
 #+srcname: starter-kit-window-view-stuff
 #+begin_src emacs-lisp 
@@ -53,7 +52,7 @@ will load the =railscasts= color theme when Emacs starts.
         font-lock-verbose nil
         inhibit-startup-message t
         transient-mark-mode t
-        color-theme-is-global t
+      ;;  color-theme-is-global t
         delete-by-moving-to-trash t
         shift-select-mode nil
         truncate-partial-width-windows nil
@@ -62,6 +61,7 @@ will load the =railscasts= color theme when Emacs starts.
                                     indentation space-after-tab)
         whitespace-line-column 100
         ediff-window-setup-function 'ediff-setup-windows-plain
+        ediff-split-window-function 'split-window-horizontally
         oddmuse-directory (concat dotfiles-dir "oddmuse")
         xterm-mouse-mode t
         save-place-file (concat dotfiles-dir "places"))
@@ -90,7 +90,7 @@ Set this to whatever browser you use e.g...
 (auto-compression-mode t)
 #+end_src
 
-** Enable syntax highlighting for older Emacsen that have it off
+** Enable syntax highlighting 
 #+begin_src emacs-lisp
 (global-font-lock-mode t)
 #+end_src
@@ -104,7 +104,6 @@ If launching Emacs as in windowing system, show the menu. If launching in a tty/
       (menu-bar-mode -1)
       )
 #+end_src
-
 
 ** Save a list of recent files visited.
 #+begin_emacs-lisp 
@@ -130,7 +129,7 @@ ido-mode is like magic pixie dust!
           ido-max-prospects 10))
 #+end_src
 
-** Other
+** Other, spell checking, tabs, imenu and a coding hook
 #+begin_src emacs-lisp 
   (set-default 'indent-tabs-mode nil)
   (set-default 'indicate-empty-lines t)
@@ -139,12 +138,26 @@ ido-mode is like magic pixie dust!
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
   (add-hook 'text-mode-hook 'turn-on-flyspell)
   
-  (defvar coding-hook nil
+  (defvar starter-kit-coding-hook nil
     "Hook that gets run on activation of any programming mode.")
   
   (defalias 'yes-or-no-p 'y-or-n-p)
-  (random t) ;; Seed the random-number generator
+  ;; Seed the random-number generator
+  (random t)
 #+end_src
+
+*** functions for prettier source code
+#+begin_src emacs-lisp
+(defun starter-kit-pretty-lambdas ()
+  (font-lock-add-keywords
+   nil `(("(\\(lambda\\>\\)"
+          (0 (progn (compose-region (match-beginning 1) (match-end 1)
+                                    ,(make-char 'greek-iso8859-7 107))
+                    nil))))))
+#+end_src
+
+
+
 
 *** possible issues/resolutions with flyspell
 Most of the solution came from [[http://www.emacswiki.org/emacs/FlySpell][EmacsWiki-FlySpell]].  Here is one

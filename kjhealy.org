@@ -2,53 +2,57 @@
 #+OPTIONS: toc:nil num:nil ^:nil
 
 * Starter Kit kjhealy
-/You must change the name of this file/ to the value of the Emacs
- variable =user-login-name= OR =system-name=, so that it will be
- picked up by =init.el= when Emacs starts up, and be loaded
- properly. To find the current value of these variables on your
- system, do =C-h-v system-name [RET]= and =C-h-v user-login-name
- [RET]=. For example, on my system =user-login-name= is 'kjhealy', so
- this file is named =kjhealy.org=, and when Emacs starts up with the
- starter kit it creates the file =kjhealy.el=.
+This file contains very local customizations---ones that in some cases
+you will not be able to just drop in and use because, e.g., they
+involve references to particular files on my own machine. It's
+included here for completeness, and as and example of the kind of
+things you might put in your own user-specific file.
+
+To use the customizations here yourself, /you must change the name of
+ this file to match your own user name or system name/. Those are the
+ values of the Emacs variables =user-login-name= or =system-name=, so
+ that it will be picked up by =init.el= when Emacs starts up, and get
+ loaded properly. To find the current value of these variables on your
+ system, launch emacs and do =C-h-v system-name [RET]= or =C-h-v
+ user-login-name [RET]=. For example, on my system =user-login-name=
+ is 'kjhealy', so this file is named =kjhealy.org=, and when Emacs
+ starts up with the starter kit it creates the file =kjhealy.el=.
  
 You will also need to change the values for the location of bibtex
  databases, pandoc and orgmode-mobile specified below, and some other
  settings. *Search for 'kjhealy' in this file* to find the paths that
- need to be updated. Change them as needed or comment them out if you
- don't use these features. Finally, the [[*Local%20Org-mode%20XeLaTeX%20Export%20Settings][Local Org-mode XeLaTeX Export
- Settings]] section below has references to fonts that you may not have
- available on your system. Change the references as appropriate or
- simply comment out the lines.
+ need to be updated. Change them as needed or delete them if you don't
+ need these features. 
 
-** Miscellaneous Settings and starter-kit overrides
-*** Recent File Menu
-Turn on the recent file menu. 
+Finally, the [[*Local%20Org-mode%20XeLaTeX%20Export%20Settings][Local Org-mode XeLaTeX Export Settings]] section below has
+ references to fonts that you may not have available on your
+ system. Change the references as appropriate, or comment out or
+ delete the lines.
 
-#+srcname: local-loadpath
-#+begin_src emacs-lisp
-    ;; recent file menu
-    (require 'recentf)
-    (recentf-mode 1)
-#+end_src
-
+** Local Miscellaneous Settings
 *** Color Theme and Line Highlighting
-The Starter Kit uses Ethan Schoonover's /Solarized/ color theme. You can easily switch between light and dark versions of the theme. Some other useful themes are included in the =src/color-theme-themes/= directory of the kit. 
+The theme package is loaded in =starter-kit-misc.org=. The settings
+here adjust the height of some headings in Org and LaTeX mode, as well
+as turning off the sans-serif heading style that AucTeX defaults to.
 
 #+srcname: local-settings
 #+begin_src emacs-lisp
-  ;; Color Theme from vendor directory
-  (require 'color-theme-solarized)
-  (load-file "~/.emacs.d/src/color-theme-themes/color-theme-tangosoft.el")
-  (if window-system
-      (color-theme-solarized 'dark)
-    ;; or if you prefer ...
-    ;; (color-theme-solarized 'light)
-    (color-theme-tangosoft) ;; Emacs started in tty
-      )
+  (add-hook 'latex-mode-hook 
+            (lambda ()
+              (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground "#b58900")
+              (set-face-attribute 'font-latex-sectioning-0-face nil :height 3)
+              (set-face-attribute 'font-latex-sectioning-1-face nil :height 2)
+              (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5)
+              (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2)
+              (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)))
   
-  ;; Define a shortcut to switch between dark and light versions of solarized
-  (global-set-key (kbd "C-c l") 'color-theme-solarized)
-  
+   (add-hook 'org-mode-hook 
+             (lambda ()
+               (set-face-attribute 'org-level-1 nil :height 1.5)
+               (set-face-attribute 'org-level-2 nil :height 1.2)
+               (set-face-attribute 'org-level-3 nil :height 1.1)
+               (set-face-attribute 'org-level-4 nil :height 1.1)
+               (set-face-attribute 'org-level-5 nil :height 1.1)))
 #+end_src
 
 *** Run Emacs in Full Screen
@@ -119,34 +123,12 @@ Internal to emacs; also seems not to work on OS X.
                                          'fullboth)))))
   (global-set-key (kbd "C-c f") 'toggle-fullscreen)  
 #+end_src
-
-*** Windmove
-    Tweak to Windmove setup. Without this, you keep getting elisp
-    errors when you try to wrap around.
-#+srcname: local-windmove
-#+begin_src emacs-lisp
-(setq windmove-wrap-around t)
-#+end_src
-
-*** Resizing inside the frame
-When your frame (i.e., the main Emacs window) is split into different parts (e.g. using =C-x 2= or =C-x 3=) we sometimes want to resize these parts dynamically. This defines =Shift-C-[arrow keys]= so you can do this. 
- 
-#+srcname: resize-splits
-#+begin_src emacs-lisp
-  ;; resizing 'windows' (i.e., inside the frame)
-  (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
-  (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
-  (global-set-key (kbd "S-C-<down>") 'shrink-window)
-  (global-set-key (kbd "S-C-<up>") 'enlarge-window)  
-#+end_src
-
+    
 *** Mac Key mode
     Used with Mitsuharu Yamamoto's carbon-patched Emacs, which turns
     off support for default mac bindings. Turned off by default.
 #+srcname: mac-keys
-#+begin_src emacs-lisp tangle: no
-   (setq mac-command-modifier 'alt mac-option-modifier 'meta)
-   (require 'redo+)
+#+begin_src emacs-lisp :tangle no
    (require 'mac-key-mode)
    (mac-key-mode 1)
    (add-hook 'mac-key-mode-hook
@@ -220,8 +202,10 @@ Tell RefTeX where the bibliography files are.
 #+end_src
 
 *** Local vc commands
-    Run the vc shellscript before running xelatex with C-c c (instead of
-    C-c C-c for regular compile).
+    Run the vc shellscript before running xelatex with C-c c (instead
+    of C-c C-c for regular compile). This assumes you're using the VC
+    LaTeX package, have vc in your path, and have vc-awk in the
+    directory you're working in.
 
 #+srcname: vc-command
 #+begin_src emacs-lisp
@@ -346,85 +330,82 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 
 #+source: orgmode-xelatex-export
 #+begin_src emacs-lisp
-  (require 'org-latex)   
-  ;; Choose either listings or minted for exporting source code blocks.
-  ;; Using minted (as here) requires pygments be installed. To use the
-  ;; default listings package instead, use
-  ;; (setq org-export-latex-listings t)
-  ;; and change references to "minted" below to "listings"
-  (setq org-export-latex-listings 'minted)
-          
-  ;; default settings for minted code blocks
-  (setq org-export-latex-minted-options
-        '(;("frame" "single")
-          ("bgcolor" "bg") ; bg will need to be defined in the preamble of your document. It's defined in org-preamble-pdflatex.sty and org-preamble-xelatex.sty below.
-          ("fontsize" "\\small")
-          ))
-          
-            
-  ;; Originally taken from Bruno Tavernier: http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
-  ;; but adapted to use latexmk 4.22 or higher.  
-  (defun my-auto-tex-cmd ()
-    "When exporting from .org with latex, automatically run latex,
-                 pdflatex, or xelatex as appropriate, using latexmk."
-    (let ((texcmd)))
-    ;; default command: pdflatex 
-    (setq texcmd "latexmk -pdflatex='pdflatex --shell-escape' -pdf %f")        
-    ;; pdflatex -> .pdf
-    (if (string-match "LATEX_CMD: pdflatex" (buffer-string))
-        (setq texcmd "latexmk -pdflatex='pdflatex --shell-escape' -pdf %f"))
-    ;; xelatex -> .pdf
-              (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-                  (setq texcmd "latexmk -pdflatex='xelatex --shell-escape' -pdf %f"))
-              ;; LaTeX compilation command
-              (setq org-latex-to-pdf-process (list texcmd)))
-            
-  (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-cmd)
-            
-  ;; Default packages included in /every/ tex file, latex, pdflatex or xelatex
-  (setq org-export-latex-packages-alist
-                  '(("" "graphicx" t)
-                        ("" "longtable" nil)
-                        ("" "float" )))
-              
-  ;; Custom packages
-  (defun my-auto-tex-parameters ()
-    "Automatically select the tex packages to include. See https://github.com/kjhealy/latex-custom-kjh for the support files included here."
-    ;; default packages for ordinary latex or pdflatex export
-    (setq org-export-latex-default-packages-alist
-          '(("AUTO" "inputenc" t)
-            ("minted,minion" "org-preamble-pdflatex" t)))        
-    ;; Packages to include when xelatex is used
-                  (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-                      (setq org-export-latex-default-packages-alist
-                            '(("minted" "org-preamble-xelatex" t) )))
-                  
-      
-                  (if (string-match "LATEX_CMD: pdflatex" (buffer-string))
-                      (setq org-export-latex-classes
-                            (cons '("article"
-                                    "\\documentclass[11pt,article,oneside]{memoir}
-    \\input{vc} % vc package"
-                                    ("\\section{%s}" . "\\section*{%s}")
-                                    ("\\subsection{%s}" . "\\subsection*{%s}")
-                                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-                                  org-export-latex-classes)))
-      
-                  (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-                      (setq org-export-latex-classes
-                            (cons '("article"
-                                    "\\documentclass[11pt,article,oneside]{memoir}
-  \\input{vc} % vc package"
-                                    ("\\section{%s}" . "\\section*{%s}")
-                                    ("\\subsection{%s}" . "\\subsection*{%s}")
-                                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-                                  org-export-latex-classes))))  
-                
-            (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-parameters)      
+    (require 'org-latex)   
+    ;; Choose either listings or minted for exporting source code blocks.
+    ;; Using minted (as here) requires pygments be installed. To use the
+    ;; default listings package instead, use
+    ;; (setq org-export-latex-listings t)
+    ;; and change references to "minted" below to "listings"
+    (setq org-export-latex-listings 'minted)
+    
+    ;; default settings for minted code blocks
+    (setq org-export-latex-minted-options
+          '(;("frame" "single")
+            ("bgcolor" "bg") ; bg will need to be defined in the preamble of your document. It's defined in org-preamble-pdflatex.sty and org-preamble-xelatex.sty below.
+            ("fontsize" "\\small")
+            ))
+  ;; turn off the default toc behavior; deal with it properly in headers to files.
+  (defun org-export-latex-no-toc (depth)  
+      (when depth
+        (format "%% Org-mode is exporting headings to %s levels.\n"
+                depth)))
+  (setq org-export-latex-format-toc-function 'org-export-latex-no-toc)
+  
+    (add-to-list 'org-export-latex-classes
+                 '("memarticle"
+                   "\\documentclass[11pt,oneside,article]{memoir}\n\\input{vc} % vc package"
+                    ("\\section{%s}" . "\\section*{%s}")
+                    ("\\subsection{%s}" . "\\subsection*{%s}")
+                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+    
+    (add-to-list 'org-export-latex-classes
+                 '("membook"
+                   "\\documentclass[11pt,oneside]{memoir}\n\\input{vc} % vc package"
+                   ("\\chapter{%s}" . "\\chapter*{%s}")
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+    
+    ;; Originally taken from Bruno Tavernier: http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
+    ;; but adapted to use latexmk 4.22 or higher.  
+    (defun my-auto-tex-cmd ()
+      "When exporting from .org with latex, automatically run latex,
+                       pdflatex, or xelatex as appropriate, using latexmk."
+      (let ((texcmd)))
+      ;; default command: pdflatex 
+      (setq texcmd "latexmk -pdflatex='pdflatex --shell-escape' -pdf %f")        
+      ;; pdflatex -> .pdf
+      (if (string-match "LATEX_CMD: pdflatex" (buffer-string))
+          (setq texcmd "latexmk -pdflatex='pdflatex --shell-escape' -pdf %f"))
+      ;; xelatex -> .pdf
+      (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+          (setq texcmd "latexmk -pdflatex='xelatex --shell-escape' -pdf %f"))
+      ;; LaTeX compilation command
+      (setq org-latex-to-pdf-process (list texcmd)))
+    
+    (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-cmd)
+    
+    ;; Default packages included in /every/ tex file, latex, pdflatex or xelatex
+    (setq org-export-latex-packages-alist
+          '(("" "graphicx" t)
+            ("" "longtable" nil)
+            ("" "float" )))
+    
+    ;; Custom packages
+    (defun my-auto-tex-parameters ()
+      "Automatically select the tex packages to include. See https://github.com/kjhealy/latex-custom-kjh for the support files included here."
+      ;; default packages for ordinary latex or pdflatex export
+      (setq org-export-latex-default-packages-alist
+            '(("AUTO" "inputenc" t)
+              ("minted,minion" "org-preamble-pdflatex" t)))        
+      ;; Packages to include when xelatex is used
+      (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+          (setq org-export-latex-default-packages-alist
+                '(("minted" "org-preamble-xelatex" t) ))))
+    
+    (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-parameters)      
 #+end_src
 
 *** ebib and citation settings
@@ -533,28 +514,19 @@ Create =html= files form the =org= sources, to help with documentation. To set u
   (setq org-publish-project-alist
          '(("org"
             :base-directory "~/.emacs.d/"
-            :publishing-directory "~/Documents/websites/kjhhome/esk/"
+            :publishing-directory "~/Documents/websites/esk/"
             :auto-sitemap t
             :sitemap-filename "index.org"
             :sitemap-title "Emacs Starter Kit for the Social Sciences: Documentation"
             :section-numbers t
             :table-of-contents nil
             :style "<link rel=\"stylesheet\"
-                   href=\"http://kieranhealy.org/css/blueprint/org-screen.css\"
+                   href=\"http://kieranhealy.org/stylesheets/screen.css\"
                    type=\"text/css\"/>")))
   
-    (setq org-export-html-style-extra "<link rel=\"stylesheet\" href=\"http://kieranhealy.org/css/kjh-org-custom.css\" type=\"text/css\"><link rel=\"stylesheet\" href=\"http://kieranhealy.org/css/blueprint/print.css\" type=\"text/css\" media=\"print\"> <!--[if IE]><link rel=\"stylesheet\" href=\"http://kieranhealy.org/css/blueprint/ie.css\" type=\"text/css\" media=\"screen,projection\"><![endif]-->")    
+    (setq org-export-html-style-extra "") 
+    (setq org-export-html-postamble nil)
   
-#+end_src
-
-** Minimal mode
-   A nice clutter-free appearance with a reduced-size modeline, no
-   scroll bars, and no fringe indicators. Useful in conjunction with running Emacs full-screen. 
-
-#+source: minimal-mode
-#+begin_src emacs-lisp
-  (require 'minimal)
-  (global-set-key (kbd "C-c s") 'minimal-mode)
 #+end_src
 
 ** Auto-complete mode
@@ -567,7 +539,9 @@ Create =html= files form the =org= sources, to help with documentation. To set u
   ;; compile it if the .el file is newer 
   (byte-recompile-directory "~/.emacs.d/src/auto-complete")
   (byte-recompile-directory "~/.emacs.d/src/auto-complete/dict/ess")
+  (require 'auto-complete)
   (require 'auto-complete-config)
+  (global-auto-complete-mode t)
   (add-to-list 'ac-dictionary-directories "~/.emacs.d/src/auto-complete/dict")
   (setq ac-modes (append ac-modes '(org-mode))) 
   (ac-config-default)
@@ -577,8 +551,9 @@ Create =html= files form the =org= sources, to help with documentation. To set u
   (ac-flyspell-workaround)
   (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
   (setq ac-auto-show-menu 0.8)
-  ;; consistent  with zenburnish theme
+  ;; 
   (set-face-background 'ac-candidate-face "#366060")
+  (set-face-foreground 'ac-selection-face "#1f1f1f")
   (set-face-background 'ac-selection-face "#8cd0d3")
   (set-face-foreground 'ac-selection-face "#1f1f1f")
   
@@ -595,7 +570,7 @@ Sometimes useful for getting help on R or Emacs.
 #+end_src
 
 ** Final Custom elements
-Some local tweaks. 
+Some last tweaks. 
 
 #+srcname: final-custom
 #+begin_src emacs-lisp

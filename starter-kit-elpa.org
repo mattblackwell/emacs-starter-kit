@@ -6,7 +6,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 * Starter Kit ELPA
 [[http://tromey.com/elpa/][Emacs List Package Archive]] (ELPA)
 
-The following packages should always be installed
+The following packages will be downloaded and installed.
 
 #+begin_src emacs-lisp
   (defvar starter-kit-packages (list 'idle-highlight
@@ -15,6 +15,16 @@ The following packages should always be installed
                                      'js2-mode
                                      'css-mode
                                      'yasnippet-bundle
+                                     'autopair
+                                     'cdlatex
+                                     'browse-kill-ring
+                                     'haskell-mode
+                                     'magit
+                                     'mac-key-mode
+                                     'maxframe
+                                     'typopunct
+                                     'python
+                                     'redo+
                                      'gist
                                      'paredit
                                      'auctex
@@ -22,7 +32,10 @@ The following packages should always be installed
                                      'highline
                                      'textmate
                                      'smex
-                                     'ess ;; from http://kieranhealy.org/packages
+                                     'solarized-theme
+                                     'tango-2-theme
+                                     'yaml-mode
+                                     'zenburn-theme
                                      )
     "Libraries that should be installed by default.")
 #+end_src
