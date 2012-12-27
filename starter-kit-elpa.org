@@ -9,34 +9,38 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 The following packages will be downloaded and installed.
 
 #+begin_src emacs-lisp
-  (defvar starter-kit-packages (list 'idle-highlight
-                                     'ruby-mode
-                                     'inf-ruby
-                                     'js2-mode
-                                     'css-mode
-                                     'yasnippet-bundle
-                                     'autopair
-                                     'cdlatex
-                                     'browse-kill-ring
-                                     'haskell-mode
-                                     'magit
-                                     'mac-key-mode
-                                     'maxframe
-                                     'typopunct
-                                     'python
-                                     'redo+
-                                     'gist
-                                     'paredit
-                                     'auctex
-                                     'markdown-mode
-                                     'highline
-                                     'textmate
-                                     'smex
-                                     'solarized-theme
-                                     'tango-2-theme
-                                     'yaml-mode
-                                     'zenburn-theme
-                                     )
+  (defvar starter-kit-packages (list 
+                                'auctex
+                                'autopair
+                                'browse-kill-ring
+                                'cdlatex
+                                'css-mode
+                                'exec-path-from-shell
+                                'expand-region
+                                'gist
+                                'hl-line+
+                                'idle-highlight
+                                'inf-ruby
+                                'js2-mode
+                                'mac-key-mode
+                                'magit
+                                'markdown-mode
+                                'maxframe
+                                'multiple-cursors
+                                'paredit
+                                'python
+                                'redo+
+                                'ruby-mode
+                                's
+                                'smex
+                                'solarized-theme
+                                'tango-2-theme
+                                'textmate
+                                'typopunct
+                                'yaml-mode
+                                'yasnippet-bundle
+                                'zenburn-theme
+                                )
     "Libraries that should be installed by default.")
 #+end_src
 
@@ -74,8 +78,16 @@ On your first run, this should pull in all the base packages.
   (starter-kit-elpa-install))
 #+end_src
 
+Make sure the PATH variable is set properly. (Uses exec-path-from-shell package.)
+#+source: fix-path
+#+begin_src emacs-lisp
+  (when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+#+end_src
+
+
 Workaround for an ELPA bug that people are reporting but I've been
 unable to reproduce:
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (autoload 'paredit-mode "paredit")
 #+end_src

@@ -86,19 +86,15 @@ can also be found at [[http://kjhealy.github.com/emacs-starter-kit/]]
    git submodule init
    git submodule update
    #+end_src
-4. build Org-mode
-   #+begin_src sh
-   cd ~/.emacs.d/src/org/
-   git checkout master
-   make
-   #+end_src
-5. Finally, change the name of the starter kit's =kjhealy.org= to that
+4. Finally, change the name of the starter kit's =kjhealy.org= to that
    of =<USERNAME>.org= or =<SYSTEMNAME>.org=, based on the information
    you noted above with the =whoami= and =hostname= commands. These
    files are where you can add in any of your own existing or future
-   customizations without breaking the starter kit's overall setup.
-
-6. Launch Emacs!
+   customizations without breaking the starter kit's overall
+   setup. See the =kjhealy.org= file for more information on further
+   changes you need to make within that file, e.g., so that it points
+   to your LaTeX =.bib= files properly, etc.
+5. Launch Emacs!
 
 After setup you may need to restart Emacs a couple of times while it
 downloads and installs packages from [[* Emacs Lisp Package Archive][ELPA]].
@@ -309,7 +305,7 @@ since they are likely to be used in every session
        (lambda (file)
          (when (string= "org" (file-name-extension file))
            (let ((el-file (concat (file-name-sans-extension file) ".el")))
-             (when (or arg
+             (when (or args
                        (not (and (file-exists-p el-file)
                                  (> (age file) (age el-file)))))
                (org-babel-tangle-file file el-file "emacs-lisp")
@@ -334,13 +330,11 @@ Load up [[http://tromey.com/elpa/][ELPA]], the Emacs Lisp package manager.
 #+srcname: starter-kit-elpa
 #+begin_src emacs-lisp 
   (require 'package)
-;;  (add-to-list 'package-archives '("original" . "http://tromey.com/elpa/"))
-  (add-to-list 'package-archives
-               '("technomancy" . "http://repo.technomancy.us/emacs/")
-               t)
-  (add-to-list 'package-archives
-               '("marmalade" . 
-               "http://marmalade-repo.org/packages/") t)
+  (setq package-archives
+        '(("gnu"         . "http://elpa.gnu.org/packages/")
+          ("original"    . "http://tromey.com/elpa/")
+          ("org"         . "http://orgmode.org/elpa/")
+          ("marmalade"   . "http://marmalade-repo.org/packages/")))
   (package-initialize)
   (starter-kit-load "starter-kit-elpa.org")
 #+end_src
@@ -464,13 +458,6 @@ Located in [[file:starter-kit-lisp.org][starter-kit-lisp]]
 (starter-kit-load "starter-kit-lisp.org")
 #+end_src
 
-*** Starter kit Haskell
-Located in [[file:starter-kit-haskell.org][starter-kit-haskell]]
-
-#+begin_src emacs-lisp
-(starter-kit-load "starter-kit-haskell.org")
-#+end_src
-
 *** Starter kit ruby
 Located in [[file:starter-kit-ruby.org][starter-kit-ruby]]
 
@@ -519,7 +506,6 @@ Located in [[file:starter-kit-text.org][starter-kit-text]]
 #+begin_src emacs-lisp
   (starter-kit-load "starter-kit-text.org")
 #+end_src
-
 
 ** Load User/System Specific Files
 *** Settings from M-x customize
