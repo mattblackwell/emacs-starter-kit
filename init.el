@@ -69,5 +69,3 @@
 (setq org-replace-disputed-keys t)
 (require 'org)
 (org-babel-load-file (expand-file-name "starter-kit.org" dotfiles-dir))
-
-;;; init.el ends here

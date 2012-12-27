@@ -54,7 +54,7 @@ This file provides settings for ESS and R.
   (setq ess-swv-processor "'knitr")
 #+end_src
  
-** Make shift-enter to a lot in ESS.
+** Make cmd-enter to a lot in ESS.
  Use shift-enter to split window & launch R (if not running), execute
  highlighted region (if R running & area highlighted), or execute
  current line (and move to next line, skipping comments). Nice. See
@@ -87,14 +87,14 @@ This file provides settings for ESS and R.
       (call-interactively 'ess-eval-line-and-step)))
   (add-hook 'ess-mode-hook
 	    '(lambda()
-	       (local-set-key [(shift return)] 'my-ess-eval)))
+	       (local-set-key [A-return] 'my-ess-eval)))
   (add-hook 'inferior-ess-mode-hook
 	    '(lambda()
-	       (local-set-key [C-up] 'comint-previous-input)
-	       (local-set-key [C-down] 'comint-next-input)))
+	       (local-set-key [M-up] 'comint-previous-input)
+	       (local-set-key [M-down] 'comint-next-input)))
  (add-hook 'Rnw-mode-hook 
           '(lambda() 
-             (local-set-key [(shift return)] 'my-ess-eval))) 
+             (local-set-key [A-return] 'my-ess-eval))) 
   (require 'ess-site)
 #+end_src
 
