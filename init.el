@@ -60,5 +60,3 @@
 
 ;; load up the main file
 (org-babel-load-file (expand-file-name "starter-kit.org" dotfiles-dir))
-
-;;; init.el ends here

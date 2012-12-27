@@ -146,7 +146,7 @@ Allow AucTeX to use biber as well as/instead of bibtex.
       default as it should be added to the user's personal
       configuration as needed.
 #+srcname: set-exec-path
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
       (setenv "PATH" (concat "/usr/texbin:" (getenv "PATH")))
 #+end_src
 

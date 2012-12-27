@@ -1,5 +1,9 @@
 #+TITLE: Local User Customizations
-#+OPTIONS: toc:nil num:nil ^:nil
+#+OPTIONS: toc:nil num:nil ^:nil 
+#+LATEX_CMD: xelatex
+#+LATEX_HEADER: \setsansfont[Mapping=tex-text, BoldFont={* Bold SemiCondensed}, ItalicFont={* Semibold SemiCondensed Italic}]{Myriad Pro}
+#+LATEX_HEADER: \setmonofont[Mapping=tex-text,Scale=MatchLowercase]{PragmataPro} 
+#+LATEX_HEADER: \setromanfont[Mapping=tex-text, Numbers=OldStyle, BoldFont={* Semibold}]{Minion Pro}
 
 * Starter Kit kjhealy
 This file contains very local customizations---ones that in some cases
@@ -179,11 +183,11 @@ Tell RefTeX where the bibliography files are.
 #+begin_src emacs-lisp    
     ;; Make RefTex able to find my local bib files
     (setq reftex-bibpath-environment-variables
-    '("/Users/kjhealy/Library/texmf/bibtex/bib"))
+    '("/Users/mblackwell/Library/texmf/bibtex/bib"))
 
     ;; Default bibliography
     (setq reftex-default-bibliography
-    '("/Users/kjhealy/Documents/bibs/socbib.bib"))
+    '("/Users/mblackwell/Documents/bibs/mb.bib"))
 
 
     ;; CDLaTex minor mode: tab-trigger environments, paired paren
@@ -234,7 +238,7 @@ Tell RefTeX where the bibliography files are.
  $PATH directly.)
 #+src-name: pandoc_mode
 #+begin_src emacs-lisp
- (setenv "PATH" (concat "/Users/kjhealy/.cabal/bin:" (getenv "PATH")))
+ (setenv "PATH" (concat "/Users/mblackwell/.cabal/bin:" (getenv "PATH")))
  (load "pandoc-mode")
  (add-hook 'markdown-mode-hook 'turn-on-pandoc)
  (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)

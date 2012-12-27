@@ -115,6 +115,10 @@ Mardown and Pandoc, as well as spellchecking and line-wrapping.
   (require 'autopair)
   (autopair-global-mode) ;; enable autopair in all buffers 
   (setq autopair-autowrap t)
+(add-hook 'TeX-mode-hook
+          #'(lambda ()
+              (modify-syntax-entry ?$ "\"")
+	      (autopair-mode)))
 #+end_src
 
 ** Skeleton mode
