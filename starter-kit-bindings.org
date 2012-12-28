@@ -199,7 +199,7 @@ When windows get out of order, you can rotate them.
 Use a little bit of Mac keys, but not all of them.
 #+source: mackeys1
 #+begin_src emacs-lisp
-(require 'redo+) 
+;;(require 'redo+) 
 (setq mac-command-modifier 'alt mac-option-modifier 'meta)
 (global-set-key [(alt a)] 'mark-whole-buffer)
 (global-set-key [(alt v)] 'yank)

@@ -649,7 +649,7 @@ Some local tweaks.
   (require 'column-marker)
   (add-hook 'ess-mode-hook (lambda () (interactive) (column-marker-1 80)))
   
-  (require 'minimap)
+  ;;(require 'minimap)
   ;;; init.el ends here
   (put 'downcase-region 'disabled nil)
   (cua-mode)
