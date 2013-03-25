@@ -95,7 +95,7 @@ This file provides settings for ESS and R.
 #+begin_src emacs_lisp
   (require 'r-autoyas)
   (add hook 'ess-mode-hook 'r-autoyas-ess-activate)
-#end_src
+#+end_src
 ** R-object tooltips
 Taken from http://blogisticreflections.wordpress.com/2009/10/01/r-object-tooltips-in-ess/
 #+begin_quote 

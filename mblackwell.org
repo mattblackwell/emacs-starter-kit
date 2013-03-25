@@ -8,6 +8,12 @@ involve references to particular files on my own machine. It's
 included here for completeness, and as and example of the kind of
 things you might put in your own user-specific file.
 
+You will also need to change the values for the location of bibtex
+ databases, pandoc and orgmode-mobile specified below, and some other
+ settings. *Search for 'kjhealy' in this file* to find the paths that
+ need to be updated. Change them as needed or delete them if you don't
+ need these features. 
+ 
 To use the customizations here yourself, /you must change the name of
  this file to match your own user name or system name/. Those are the
  values of the Emacs variables =user-login-name= or =system-name=, so
@@ -17,12 +23,6 @@ To use the customizations here yourself, /you must change the name of
  user-login-name [RET]=. For example, on my system =user-login-name=
  is 'kjhealy', so this file is named =kjhealy.org=, and when Emacs
  starts up with the starter kit it creates the file =kjhealy.el=.
- 
-You will also need to change the values for the location of bibtex
- databases, pandoc and orgmode-mobile specified below, and some other
- settings. *Search for 'kjhealy' in this file* to find the paths that
- need to be updated. Change them as needed or delete them if you don't
- need these features. 
 
 Finally, the [[*Local%20Org-mode%20XeLaTeX%20Export%20Settings][Local Org-mode XeLaTeX Export Settings]] section below has
  references to fonts that you may not have available on your
@@ -116,7 +116,7 @@ For use with Yamamoto Mitsuharu's Carbon-patched Emacs. (This is
     Used with Mitsuharu Yamamoto's carbon-patched Emacs, which turns
     off support for default mac bindings. Turned off by default.
 #+srcname: mac-keys
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
    (require 'mac-key-mode)
    (mac-key-mode 1)
    (add-hook 'mac-key-mode-hook
@@ -606,18 +606,9 @@ Some last tweaks.
   (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-trucation)
   
   (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
-  
-  ;; find the aspell program
-  (setq exec-path (append exec-path '("/usr/local/bin")))
-  (setq exec-path (append exec-path '("/opt/local/bin")))  
-  (setq ispell-program-name "aspell")
-  (setq ispell-list-command "list")
-  (setq flyspell-issue-welcome-flag nil) ;; fix flyspell problem
   (add-hook 'LaTeX-mode-hook 'flyspell-mode)
   (setq font-latex-fontify-sectioning 'color)
-  (require 'column-marker)
-  (add-hook 'ess-mode-hook (lambda () (interactive) (column-marker-1 80)))
-  
+   
   ;;(require 'minimap)
   ;;; init.el ends here
   (put 'downcase-region 'disabled nil)
@@ -626,10 +617,6 @@ Some last tweaks.
   (add-to-list 'default-frame-alist '(height . 60))
   (add-to-list 'default-frame-alist '(width . 100))
   (set-frame-position (selected-frame) 50 0)
-  ;; Add knitr support
-  (require 'ess-knitr)  
-
-  ;; Set reftex
 #+end_src
    
    
