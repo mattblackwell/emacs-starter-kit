@@ -30,7 +30,7 @@ Finally, the [[*Local%20Org-mode%20XeLaTeX%20Export%20Settings][Local Org-mode X
  delete the lines.
 
 ** Local Miscellaneous Settings
-*** Color Theme and Line Highlighting
+*** Color Theme Tweaks
 The theme package is loaded in =starter-kit-misc.org=. The settings
 here adjust the height of some headings in Org and LaTeX mode, as well
 as turning off the sans-serif heading style that AucTeX defaults to.
@@ -40,8 +40,8 @@ as turning off the sans-serif heading style that AucTeX defaults to.
   (add-hook 'latex-mode-hook 
             (lambda ()
               (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground "#b58900")
-              (set-face-attribute 'font-latex-sectioning-0-face nil :inherit nil :height 3)
-              (set-face-attribute 'font-latex-sectioning-1-face nil :inherit nil :height 2)
+              (set-face-attribute 'font-latex-sectioning-0-face nil :height 3)
+              (set-face-attribute 'font-latex-sectioning-1-face nil :height 2)
               (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5)
               (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2)
               (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)
@@ -100,7 +100,7 @@ Fullscreen toggle using maxframe.el.
 #+end_src
 
 **** Option 4
-For use with Yamamoto Mitsuharu's Carbon-patched Emacs 23. (This is
+For use with Yamamoto Mitsuharu's Carbon-patched Emacs. (This is
     what I use, but it requires you compile a custom Emacs.)
 
 #+source: fullscreen-4
@@ -164,6 +164,35 @@ When your frame (i.e., the main Emacs window) is split into different parts (e.g
              )))
 #+end_src
 
+*** Dired-x
+Dired extensions
+#+source: Dired-x
+#+begin_src emacs-lisp
+  (load "dired-x")
+#+end_src
+
+*** Dired open multiple files
+In dired mode, visit all marked files using. Bound to the "F" key. 
+#+source: dired-F
+#+begin_src emacs-lisp
+  (eval-after-load "dired"
+  '(progn
+     (define-key dired-mode-map "F" 'my-dired-find-file)
+     (defun my-dired-find-file (&optional arg)
+       "Open each of the marked files, or the file under the point, or when prefix arg, the next N files "
+       (interactive "P")
+       (let* ((fn-list (dired-get-marked-files nil arg)))
+         (mapc 'find-file fn-list)))))
+#+end_src
+
+*** Stripe Dired buffers
+#+name: stripe-dired
+#+begin_src emacs-lisp
+(require 'stripe-buffer)
+(add-hook 'org-mode-hook 'org-table-stripes-enable)
+(add-hook 'dired-mode-hook 'stripe-listify-buffer)  
+#+end_src
+
 ** Local LaTeX settings
 *** In-text Smart Quotes (XeLaTeX only)
     Redefine TeX-open-quote and TeX-close-quote to be smart quotes by default. Below, in the local org-mode settings, we'll also map the relevant function to a key we can use in org-mode, too. If you don't use XeLaTeX for processing all your =.tex= files, you should disable this option.
@@ -207,7 +236,7 @@ Tell RefTeX where the bibliography files are.
 
     ;; Default bibliography
     (setq reftex-default-bibliography
-    '("/Users/mblackwell/Documents/bibs/mb.bib"))
+    '("/Users/mblackwell/Dropbox/texmf/bibtex/bib/mb.bib"))
 
 
     ;; CDLaTex minor mode: tab-trigger environments, paired paren
