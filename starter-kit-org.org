@@ -16,7 +16,6 @@ which is also *implemented using* Org-mode and [[http://git-scm.com/][git]].
 
 ** Helpful Packages
 #+begin_src emacs-lisp
-(require 'org)
 (setq org-completion-use-ido t)
 (require 'org-special-blocks)
 ;; (if window-system (require 'org-mouse))
@@ -30,12 +29,22 @@ which is also *implemented using* Org-mode and [[http://git-scm.com/][git]].
 ;; (if window-system (require 'org-mouse))
 #+end_src
 
-** Org-Mode Hook
-The latest version of yasnippets doesn't play well with Org-mode, the
-following function allows these two to play nicely together
+** Org-Mode Hooks
+Make yasnippet work properly with org-mode. 
 #+begin_src emacs-lisp
-  (defun yas/org-very-safe-expand ()
-    (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
+;;  (defun yas/org-very-safe-expand ()
+;;    (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
+
+(defun yas-org-very-safe-expand ()
+  (let ((yas-fallback-behavior 'return-nil))
+    (and (fboundp 'yas-expand) (yas-expand))))
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (add-to-list 'org-tab-first-hook
+                         'yas-org-very-safe-expand)
+            ))
+
 #+end_src
 
 #+begin_src emacs-lisp
@@ -51,10 +60,10 @@ following function allows these two to play nicely together
               ;; display images
               (local-set-key "\M-I" 'org-toggle-iimage-in-org)
               ;; yasnippet (using the new org-cycle hooks)
-              (make-variable-buffer-local 'yas/trigger-key)
-              (setq yas/trigger-key [tab])
-              (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
-              (define-key yas/keymap [tab] 'yas/next-field)
+              ;;(make-variable-buffer-local 'yas/trigger-key)
+              ;;(setq yas/trigger-key [tab])
+              ;;(add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
+              ;;(define-key yas/keymap [tab] 'yas/next-field)
               ))
 #+end_src
 
@@ -168,7 +177,7 @@ Org-mode manual is available to the =info= command (bound to =C-h i=).
 
 ** Nice Bulleted Lists
 #+name: org-bullets
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (require 'org-bullets)
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+end_src
