@@ -1,5 +1,9 @@
 #+TITLE: Local User Customizations
-#+OPTIONS: toc:nil num:nil ^:nil
+#+OPTIONS: toc:nil num:nil ^:nil 
+#+LATEX_CMD: xelatex
+#+LATEX_HEADER: \setsansfont[Mapping=tex-text, BoldFont={* Bold SemiCondensed}, ItalicFont={* Semibold SemiCondensed Italic}]{Myriad Pro}
+#+LATEX_HEADER: \setmonofont[Mapping=tex-text,Scale=MatchLowercase]{PragmataPro} 
+#+LATEX_HEADER: \setromanfont[Mapping=tex-text, Numbers=OldStyle, BoldFont={* Semibold}]{Minion Pro}
 
 * Starter Kit kjhealy
 This file contains very local customizations---ones that in some cases
@@ -262,6 +266,15 @@ A pandoc menu for markdown and tex files.
   (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
 #+end_src
 
+** Local Polymode Support
+Polymode is a new package that supports multiple modes inside a single buffer. It is aimed particularly at literate programming approaches and supports, e.g., R and markdown in a single =.Rmd= file. So it is very useful with knitr in R, given that ESS does not yet fully support =.Rmd= files.
+
+#+source: Polymode
+#+begin_src emacs-lisp
+  (require 'poly-R)
+  (require 'poly-markdown)
+#+end_src
+
 ** Local iBuffer Settings
    Manage a lot of buffers easily with C-x C-b. Already set up
    elsewhere in the starter kit. Add local configuration here, e.g.,
@@ -345,35 +358,34 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
 #+end_src
 
 *** XeLaTeX and pdfLaTeX Export Settings
-   Configure org-mode to export directly to PDF using pdflatex or
-   xelatex, compiling the bibliography as it goes, with my preferred
-   setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your
-   preferences and local configuration.
+   Configure org-mode to export directly to PDF using  xelatex, compiling the bibliography as it goes, with my preferred setup in each case. There is a good deal of local stuff in this section. The required style files used below are available at https://github.com/kjhealy/latex-custom-kjh. You may need to adjust or remove some of these settings depending on your preferences and local configuration.
 
 #+source: orgmode-xelatex-export
 #+begin_src emacs-lisp
-    (require 'org-latex)   
+  
     ;; Choose either listings or minted for exporting source code blocks.
     ;; Using minted (as here) requires pygments be installed. To use the
     ;; default listings package instead, use
-    ;; (setq org-export-latex-listings t)
+    ;; (setq org-latex-listings t)
     ;; and change references to "minted" below to "listings"
-    (setq org-export-latex-listings 'minted)
+    (setq org-latex-listings 'minted)
     
-    ;; default settings for minted code blocks
-    (setq org-export-latex-minted-options
+    ;; default settings for minted code blocks.
+    ;; bg will need to be defined in the preamble of your document. It's defined in  org-preamble-xelatex.sty below.
+    (setq org-latex-minted-options
           '(;("frame" "single")
-            ("bgcolor" "bg") ; bg will need to be defined in the preamble of your document. It's defined in org-preamble-pdflatex.sty and org-preamble-xelatex.sty below.
+            ("bgcolor" "bg") 
             ("fontsize" "\\small")
             ))
   ;; turn off the default toc behavior; deal with it properly in headers to files.
-  (defun org-export-latex-no-toc (depth)  
-      (when depth
+  (defun org-latex-no-toc (depth)  
+    (when depth
         (format "%% Org-mode is exporting headings to %s levels.\n"
                 depth)))
-  (setq org-export-latex-format-toc-function 'org-export-latex-no-toc)
+  (setq org-latex-format-toc-function 'org-latex-no-toc)
   
-    (add-to-list 'org-export-latex-classes
+  ;; note the insertion of the \input statement for the vc information 
+  (add-to-list 'org-latex-classes
                  '("memarticle"
                    "\\documentclass[11pt,oneside,article]{memoir}\n\\input{vc} % vc package"
                     ("\\section{%s}" . "\\section*{%s}")
@@ -381,53 +393,27 @@ When in an org-mode buffer, bind TeX-insert-quote to =C-c "=. Turned off by defa
                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-    
-    (add-to-list 'org-export-latex-classes
+  
+  (add-to-list 'org-latex-classes
                  '("membook"
                    "\\documentclass[11pt,oneside]{memoir}\n\\input{vc} % vc package"
                    ("\\chapter{%s}" . "\\chapter*{%s}")
                    ("\\section{%s}" . "\\section*{%s}")
                    ("\\subsection{%s}" . "\\subsection*{%s}")
                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-    
-    ;; Originally taken from Bruno Tavernier: http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
-    ;; but adapted to use latexmk 4.22 or higher.  
-    (defun my-auto-tex-cmd ()
-      "When exporting from .org with latex, automatically run latex,
-                       pdflatex, or xelatex as appropriate, using latexmk."
-      (let ((texcmd)))
-      ;; default command: pdflatex 
-      (setq texcmd "latexmk -pdflatex='pdflatex -synctex=1 --shell-escape --' -pdf %f")        
-      ;; pdflatex -> .pdf
-      (if (string-match "LATEX_CMD: pdflatex" (buffer-string))
-          (setq texcmd "latexmk -pdflatex='pdflatex -synctex=1 --shell-escape' -pdf %f"))
-      ;; xelatex -> .pdf
-      (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-          (setq texcmd "latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
-      ;; LaTeX compilation command
-      (setq org-latex-to-pdf-process (list texcmd)))
-    
-    (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-cmd)
-    
-    ;; Default packages included in /every/ tex file, latex, pdflatex or xelatex
-    (setq org-export-latex-packages-alist
-          '(("" "graphicx" t)
+   
+  ;; LaTeX compilation command. For orgmode docs we just always use xelatex for convenience.
+  ;; You can change it to pdflatex if you like, just remember to make the adjustments to the packages-alist below.
+  (setq org-latex-pdf-process '("latexmk -pdflatex='xelatex -synctex=1 --shell-escape' -pdf %f"))
+  
+  ;; Default packages included in the tex file. As before, org-preamble-xelatex is part of latex-custom-kjh.
+  ;; There's org-preamble-pdflatex as well, if you wish to use that instead.
+  (setq org-latex-default-packages-alist nil)     
+  (setq org-latex-packages-alist
+          '(("minted" "org-preamble-xelatex" t)
+            ("" "graphicx" t)
             ("" "longtable" nil)
-            ("" "float" )))
-    
-    ;; Custom packages
-    (defun my-auto-tex-parameters ()
-      "Automatically select the tex packages to include. See https://github.com/kjhealy/latex-custom-kjh for the support files included here."
-      ;; default packages for ordinary latex or pdflatex export
-      (setq org-export-latex-default-packages-alist
-            '(("AUTO" "inputenc" t)
-              ("minted,minion" "org-preamble-pdflatex" t)))        
-      ;; Packages to include when xelatex is used
-      (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-          (setq org-export-latex-default-packages-alist
-                '(("minted" "org-preamble-xelatex" t) ))))
-    
-    (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-parameters)      
+            ("" "float" ))) 
 #+end_src
 
 *** ebib and citation settings
@@ -537,17 +523,17 @@ Create =html= files form the =org= sources, to help with documentation. To set u
          '(("org"
             :base-directory "~/.emacs.d/"
             :publishing-directory "~/Documents/websites/esk/"
-            :auto-sitemap t
+            :publishing-function org-html-publish-to-html
+            :auto-sitemap t            
             :sitemap-filename "index.org"
             :sitemap-title "Emacs Starter Kit for the Social Sciences: Documentation"
             :section-numbers t
-            :table-of-contents nil
-            :style "<link rel=\"stylesheet\"
-                   href=\"http://kieranhealy.org/stylesheets/screen.css\"
-                   type=\"text/css\"/>")))
+            :table-of-contents t
+            :html-head "<link rel=\"stylesheet\"
+                   href=\"http://kieranhealy.org/css/org.css\"
+                   type=\"text/css\"/>"            )))
   
-    (setq org-export-html-style-extra "") 
-    (setq org-export-html-postamble nil)
+  (setq org-html-postamble nil)
   
 #+end_src
 
@@ -589,7 +575,6 @@ Some last tweaks.
   '(TeX-engine (quote xetex))
   ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
   ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
-  '(show-paren-mode t)
   '(blink-cursor-mode nil)
   '(text-mode-hook (quote (text-mode-hook-identify)))
   '(cua-highlight-region-shift-only t)
@@ -605,7 +590,6 @@ Some last tweaks.
   (defun ido-disable-line-trucation () (set (make-local-variable 'truncate-lines) nil))
   (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-trucation)
   
-  (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
   (add-hook 'LaTeX-mode-hook 'flyspell-mode)
   (setq font-latex-fontify-sectioning 'color)
    
@@ -621,6 +605,12 @@ Some last tweaks.
    
    
    
+
+
    
    
    
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit User File loaded.")
+#+end_src

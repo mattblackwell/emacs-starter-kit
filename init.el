@@ -7,8 +7,10 @@
 
 ;; setq dotfiles-dir (file-name-directory (or (buffer-file-name) load-file-name)))
 (setq dotfiles-dir (file-name-directory (or load-file-name (buffer-file-name))))
-
-
+(add-to-list 'load-path dotfiles-dir)
+(setq autoload-file (concat dotfiles-dir "loaddefs.el"))
+(setq package-user-dir (concat dotfiles-dir "elpa"))
+(setq custom-file (concat dotfiles-dir "custom.el"))
 (add-to-list 'load-path (expand-file-name
                          "lisp" (expand-file-name
                                  "org" (expand-file-name
@@ -23,6 +25,9 @@
            (default-directory my-lisp-dir))
       (setq load-path (cons my-lisp-dir load-path))
       (normal-top-level-add-subdirs-to-load-path)))
+
+ (server-start); start emacs in server mode
+
 
 ;; Font-face setup. Check the availability of a some default fonts, in
 ;; order of preference. The first of these alternatives to be found is
@@ -43,12 +48,16 @@
  ((eq window-system nil) nil)
  ((font-existsp "PragmataPro")
   (set-face-attribute 'default nil :height 121 :font "PragmataPro"))
+  ((font-existsp "Source Code Pro")
+  (set-face-attribute 'default nil :height 121 :font "Source Code Pro"))
  ((font-existsp "Menlo")
   (set-face-attribute 'default nil :height 121 :font "Menlo"))
  ((font-existsp "Consolas")
   (set-face-attribute 'default nil :height 121 :font "Consolas"))
  ((font-existsp "Inconsolata")
   (set-face-attribute 'default nil :height 121 :font "Inconsolata"))
+   ((font-existsp "Envy Code R")
+  (set-face-attribute 'default nil :height 121 :font "Envy Code R"))
  )
 
 ;; Load up Org Mode and Babel
@@ -59,4 +68,3 @@
 (org-babel-load-file (expand-file-name "starter-kit.org" dotfiles-dir))
 
 ;;; init.el ends here
-(put 'upcase-region 'disabled nil)
