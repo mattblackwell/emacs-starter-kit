@@ -552,6 +552,7 @@ Some last tweaks.
   '(text-mode-hook (quote (text-mode-hook-identify)))
   '(cua-highlight-region-shift-only t)
   '(markdown-command "/usr/local/bin/multimarkdown")
+  '(auto-save-file-name-transforms '((".*" "~/.emacs.d/autosaves/\\1" t)))
   )
   
   (setq inferior-ess-own-frame t)
