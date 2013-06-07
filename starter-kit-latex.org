@@ -92,7 +92,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 #+begin_src emacs-lisp
   (autoload 'ebib "ebib" "Ebib, a BibTeX database manager." t)
   (setq ebib-preload-bib-files 
-        '("/Users/kjhealy/Documents/bibs/socbib.bib"))
+        '("/Users/mblackwell/Dropbox/texmf/bibtex/bib/mb.bib"))
   (add-hook 'LaTeX-mode-hook #'(lambda ()
           (local-set-key "\C-cb" 'ebib-insert-bibtex-key)))
 #+end_src
@@ -155,7 +155,7 @@ Allow AucTeX to use biber as well as/instead of bibtex.
       '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
       )
 
-  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))  
+  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "xelatexmk")))  
 #+end_src
 
 *** Set a Path to Executables (optional)
