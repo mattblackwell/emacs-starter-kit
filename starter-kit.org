@@ -226,19 +226,6 @@ This section contains all code implementing the Emacs Starter Kit.
 
 ** Starter kit basics
 
-*** Load path etc.
-
-#+srcname: starter-kit-load-paths
-#+begin_src emacs-lisp 
-  (setq dotfiles-dir (file-name-directory
-                      (or load-file-name (buffer-file-name))))
-  
-  (add-to-list 'load-path dotfiles-dir)
-  (setq autoload-file (concat dotfiles-dir "loaddefs.el"))
-  (setq package-user-dir (concat dotfiles-dir "elpa"))
-  (setq custom-file (concat dotfiles-dir "custom.el"))
-#+end_src
-
 *** Ubiquitous Packages
 
 These should be loaded on startup rather than autoloaded on demand
@@ -301,27 +288,47 @@ Load up [[http://tromey.com/elpa/][ELPA]], the Emacs Lisp package manager.
 
 #+srcname: starter-kit-elpa
 #+begin_src emacs-lisp 
-  (require 'package)
-  (setq package-archives
-        '(("gnu"         . "http://elpa.gnu.org/packages/")
-          ("org"         . "http://orgmode.org/elpa/")
-          ("melpa"   . "http://melpa.milkbox.net/packages/")
-          ("marmalade" . "http://marmalade-repo.org/packages/")))
+    (require 'package)
+    (setq package-archives
+          '(
+            ("org"         . "http://orgmode.org/elpa/")
+            ("gnu"         . "http://elpa.gnu.org/packages/")
+            ("melpa"   . "http://melpa.milkbox.net/packages/")
+            ("marmalade" . "http://marmalade-repo.org/packages/")))
+  
 
-(defvar melpa-exclude-packages
-  '(slime)
-  "Don't install Melpa versions of these packages.")
+;;; Add support to package.el for pre-filtering available packages
+(defvar package-filter-function nil
+  "Optional predicate function used to internally filter packages used by package.el.
 
-;; Don't take Melpa versions of certain packages
-(setq package-filter-function
-      (lambda (package version archive)
-        (and
-         (not (memq package '(eieio)))
-         (or (not (string-equal archive "melpa"))
-             (not (memq package melpa-exclude-packages))))))
+The function is called with the arguments PACKAGE VERSION ARCHIVE, where
+PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
+ARCHIVE is the string name of the package archive.")
 
-  (package-initialize)
-  (starter-kit-load "starter-kit-elpa.org")
+(defadvice package--add-to-archive-contents
+  (around filter-packages (package archive) activate)
+  "Add filtering of available packages using `package-filter-function', if non-nil."
+  (when (or (null package-filter-function)
+            (funcall package-filter-function
+                     (car package)
+                     (package-desc-vers (cdr package))
+                     archive))
+    ad-do-it))
+
+  (defvar melpa-exclude-packages
+    '(slime)
+    "Don't install Melpa versions of these packages.")
+  
+  ;; Don't take Melpa versions of certain packages
+  (setq package-filter-function
+        (lambda (package version archive)
+          (and
+           (not (memq package '(eieio)))
+           (or (not (string-equal archive "melpa"))
+               (not (memq package melpa-exclude-packages))))))
+  
+    (package-initialize)
+    (starter-kit-load "starter-kit-elpa.org")
 #+end_src
 
 #+results: starter-kit-elpa
@@ -601,3 +608,8 @@ uses), the problem most likely resides in your local setup.
 [2] The emacs starter kit uses [[http://orgmode.org/worg/org-contrib/babel/][org-babel]] to load embedded elisp code
 directly from [[http://orgmode.org/][Org Mode]] documents.
 
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit main file loaded.")
+#+end_src

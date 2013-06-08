@@ -23,7 +23,6 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
   (require 'latex-pretty-symbols)
 #+end_src
 
-
 *** Load RefTeX
 #+srcname: reftex-support
 #+begin_src emacs-lisp 
@@ -144,6 +143,21 @@ Allow AucTeX to use biber as well as/instead of bibtex.
 
 #+end_src
 
+*** Use Biblatex key template by default in bib files
+#+source: bibtex-dialect
+#+begin_src emacs-lisp :tangle no
+  (setq bibtex-dialect "BibTeX")
+#+end_src
+
+*** Use '-' as the separator in auto-generated bibtex keys
+We use this (rather than the underscore character) for compatibilty with Pandoc.
+
+#+source: bibtex-key-separator
+#+begin_src emacs-lisp :tangle no
+  (setq bibtex-autokey-titleword-separator "_")
+  (setq bibtex-autokey-year-title-separator ":_")
+#+end_src
+
 *** Use latexmk for compilation by default
 
 #+srcname: latemkdefault
@@ -199,3 +213,8 @@ Allow AucTeX to use biber as well as/instead of bibtex.
   (add-to-list 'org-babel-noweb-error-langs "latex")
 #+end_src
 
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit LaTeX loaded.")
+#+end_src
