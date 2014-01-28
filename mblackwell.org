@@ -100,7 +100,7 @@ For use with Yamamoto Mitsuharu's Carbon-patched Emacs. (This is
       (set-frame-parameter f 'fullscreen
                            (if (frame-parameter f 'fullscreen) nil 'fullboth)))
     (global-set-key (kbd "C-c f") 'fullscreen)
-    (add-hook 'after-make-frame-functions 'fullscreen)
+    ;(add-hook 'after-make-frame-functions 'fullscreen)
 #+end_src
 
 *** Mac Key mode
@@ -525,57 +525,63 @@ Some last tweaks.
 
 #+srcname: final-custom
 #+begin_src emacs-lisp
-  ;; Line-spacing tweak (Optimized for PragmataPro)
-  (setq-default line-spacing 5)
-  
-  ;; minimize fringe
-  (setq-default indicate-empty-lines nil)
-  
-  ;; Add keybindings for commenting regions of text
-  (global-set-key (kbd "C-c ;") 'comment-or-uncomment-region)
-  (global-set-key (kbd "M-'") 'comment-or-uncomment-region)
-  
-  ;; Base dir
-  (cd "~/")
-  
-  ;; custom variables kludge. Why can't I get these to work via setq?
-  (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
-  '(LaTeX-XeTeX-command "xelatex -synctex=1")
-  '(TeX-engine (quote xetex))
-  ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
-  ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
-  '(blink-cursor-mode nil)
-  '(text-mode-hook (quote (text-mode-hook-identify)))
-  '(cua-highlight-region-shift-only t)
-  '(markdown-command "/usr/local/bin/multimarkdown")
-  '(auto-save-file-name-transforms '((".*" "~/.emacs.d/autosaves/\\1" t)))
-  )
-  
-  (setq inferior-ess-own-frame t)
-  ;;(setq inferior-ess-same-window nil)
-  (setq ess-help-own-frame t)
-  (setq ess-use-auto-complete t)
-  ;; Display ido results vertically, rather than horizontally
-  (setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
-  (defun ido-disable-line-trucation () (set (make-local-variable 'truncate-lines) nil))
-  (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-trucation)
-  
-  (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
-  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-  (setq font-latex-fontify-sectioning 'color)
-   
-  ;;(require 'minimap)
-  ;;; init.el ends here
-  (put 'downcase-region 'disabled nil)
-  (cua-mode)
-  (cua-mode)
-  (add-to-list 'default-frame-alist '(height . 60))
-  (add-to-list 'default-frame-alist '(width . 100))
-  (set-frame-position (selected-frame) 50 0)
+        ;; Line-spacing tweak (Optimized for PragmataPro)
+        (setq-default line-spacing 5)
+        
+        ;; minimize fringe
+        (setq-default indicate-empty-lines nil)
+        
+        ;; Add keybindings for commenting regions of text
+        (global-set-key (kbd "C-c ;") 'comment-or-uncomment-region)
+        (global-set-key (kbd "M-'") 'comment-or-uncomment-region)
+        
+        ;; Base dir
+        (cd "~/")
+        
+        ;; custom variables kludge. Why can't I get these to work via setq?
+        (custom-set-variables
+        ;; custom-set-variables was added by Custom.
+        ;; If you edit it by hand, you could mess it up, so be careful.
+        ;; Your init file should contain only one such instance.
+        ;; If there is more than one, they won't work right.
+        '(LaTeX-XeTeX-command "xelatex -synctex=1")
+        '(TeX-engine (quote xetex))
+        ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
+        ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
+        '(blink-cursor-mode nil)
+        '(text-mode-hook (quote (text-mode-hook-identify)))
+        '(cua-highlight-region-shift-only t)
+        '(markdown-command "/usr/local/bin/multimarkdown")
+        )
+        
+        ;;(setq inferior-ess-own-frame t)
+        ;;(setq inferior-ess-same-window nil)
+        ;;(setq ess-help-own-frame t)
+        (setq ess-use-auto-complete t)
+        ;; Display ido results vertically, rather than horizontally
+        (setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
+        (defun ido-disable-line-trucation () (set (make-local-variable 'truncate-lines) nil))
+        (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-trucation)
+        
+        (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+        (setq font-latex-fontify-sectioning 'color)
+        (setq reftex-bibliography-commands '("bibliography" "nobibliography" "addbibresource"))   
+        ;;(require 'minimap)
+        ;;; init.el ends here
+        (put 'downcase-region 'disabled nil)
+        (cua-mode)
+        (cua-mode)
+        (add-to-list 'default-frame-alist '(height . 60))
+        (add-to-list 'default-frame-alist '(width . 100))
+        (set-frame-position (selected-frame) 50 0)
+        (global-set-key (kbd "A-C-<left>")  'windmove-left)
+        (global-set-key (kbd "A-C-<right>") 'windmove-right)
+        (setq completion-ignored-extensions
+        '(".o" ".lo" ".mh" ".elc" "~"
+          ".bin" ".lbin" ".fasl" ".dvi" ".bbl"
+          ".glo" ".idx" ".lot", ".bcf"  ".blg"  ".fdb_latexmk"  ".synctex.gz" 
+          ".rel" ".fls", ".run.xml"))
+  (setq ido-ignore-extensions t) 
 #+end_src
    
    
