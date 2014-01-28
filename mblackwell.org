@@ -12,12 +12,6 @@ involve references to particular files on my own machine. It's
 included here for completeness, and as and example of the kind of
 things you might put in your own user-specific file.
 
-You will also need to change the values for the location of bibtex
- databases, pandoc and orgmode-mobile specified below, and some other
- settings. *Search for 'kjhealy' in this file* to find the paths that
- need to be updated. Change them as needed or delete them if you don't
- need these features. 
- 
 To use the customizations here yourself, /you must change the name of
  this file to match your own user name or system name/. Those are the
  values of the Emacs variables =user-login-name= or =system-name=, so
@@ -27,6 +21,12 @@ To use the customizations here yourself, /you must change the name of
  user-login-name [RET]=. For example, on my system =user-login-name=
  is 'kjhealy', so this file is named =kjhealy.org=, and when Emacs
  starts up with the starter kit it creates the file =kjhealy.el=.
+ 
+You will also need to change the values for the location of bibtex
+ databases, pandoc and orgmode-mobile specified below, and some other
+ settings. *Search for 'kjhealy' in this file* to find the paths that
+ need to be updated. Change them as needed or delete them if you don't
+ need these features. 
 
 Finally, the [[*Local%20Org-mode%20XeLaTeX%20Export%20Settings][Local Org-mode XeLaTeX Export Settings]] section below has
  references to fonts that you may not have available on your
@@ -161,6 +161,18 @@ In dired mode, visit all marked files using. Bound to the "F" key.
 (add-hook 'dired-mode-hook 'stripe-listify-buffer)  
 #+end_src
 
+*** Ace Jump Mode
+Quickly move to spots in the buffer.
+
+#+name: ace-jump
+#+begin_src emacs-lisp
+  
+  (require 'ace-jump-mode)
+  (define-key global-map (kbd "C-o") 'ace-jump-mode)
+  
+#+end_src
+  
+
 ** Local LaTeX settings
 *** In-text Smart Quotes (XeLaTeX only)
     Redefine TeX-open-quote and TeX-close-quote to be smart quotes by default. Below, in the local org-mode settings, we'll also map the relevant function to a key we can use in org-mode, too. If you don't use XeLaTeX for processing all your =.tex= files, you should disable this option.
@@ -187,9 +199,7 @@ Set up AUCTeX to work with the Skim PDF viewer.
   (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
   (setq TeX-view-program-list
        '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
-  
-  (server-start); start emacs in server mode so that skim can talk to it
-    
+     
     ;; Make emacs aware of multi-file projects
     ;; (setq-default TeX-master nil)
     
@@ -554,69 +564,67 @@ Some last tweaks.
 
 #+srcname: final-custom
 #+begin_src emacs-lisp
-;; Line-spacing tweak (Optimized for PragmataPro)
-        (setq-default line-spacing 5)
-        
-        ;; minimize fringe
-        (setq-default indicate-empty-lines nil)
-        
-        ;; Add keybindings for commenting regions of text
-        (global-set-key (kbd "C-c ;") 'comment-or-uncomment-region)
-        (global-set-key (kbd "M-'") 'comment-or-uncomment-region)
-        
-        ;; Base dir
-        (cd "~/")
-        
-        ;; custom variables kludge. Why can't I get these to work via setq?
-        (custom-set-variables
-        ;; custom-set-variables was added by Custom.
-        ;; If you edit it by hand, you could mess it up, so be careful.
-        ;; Your init file should contain only one such instance.
-        ;; If there is more than one, they won't work right.
-        '(LaTeX-XeTeX-command "xelatex -synctex=1")
-        '(TeX-engine (quote xetex))
-        ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
-        ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
-        '(blink-cursor-mode nil)
-        '(text-mode-hook (quote (text-mode-hook-identify)))
-        '(cua-highlight-region-shift-only t)
-        '(markdown-command "/usr/local/bin/multimarkdown")
-        )
-        
-        ;;(setq inferior-ess-own-frame t)
-        ;;(setq inferior-ess-same-window nil)
-        ;;(setq ess-help-own-frame t)
-        (setq ess-use-auto-complete t)
-        ;; Display ido results vertically, rather than horizontally
-        (setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
-        (defun ido-disable-line-trucation () (set (make-local-variable 'truncate-lines) nil))
-        (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-trucation)
-        
-        (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-        (setq font-latex-fontify-sectioning 'color)
-        (setq reftex-bibliography-commands '("bibliography" "nobibliography" "addbibresource"))   
-        ;;(require 'minimap)
-        ;;; init.el ends here
-        (put 'downcase-region 'disabled nil)
-        (cua-mode)
-        (cua-mode)
-        (add-to-list 'default-frame-alist '(height . 60))
-        (add-to-list 'default-frame-alist '(width . 100))
-        (set-frame-position (selected-frame) 50 0)
-        (global-set-key (kbd "A-C-<left>")  'windmove-left)
-        (global-set-key (kbd "A-C-<right>") 'windmove-right)
-        (setq completion-ignored-extensions
-        '(".o" ".lo" ".mh" ".elc" "~"
-          ".bin" ".lbin" ".fasl" ".dvi" ".bbl"
-          ".glo" ".idx" ".lot", ".bcf"  ".blg"  ".fdb_latexmk"  ".synctex.gz" 
-          ".rel" ".fls", ".run.xml"))
+  ;; Line-spacing tweak (Optimized for PragmataPro)
+  (setq-default line-spacing 5)
+  
+  ;; minimize fringe
+  (setq-default indicate-empty-lines nil)
+  
+  ;; Add keybindings for commenting regions of text
+  (global-set-key (kbd "C-c ;") 'comment-or-uncomment-region)
+  (global-set-key (kbd "M-'") 'comment-or-uncomment-region)
+  
+   ;; Base dir
+   (cd "~/")
+   
+   ;; custom variables kludge. Why can't I get these to work via setq?
+   (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(LaTeX-XeTeX-command "xelatex -synctex=1")
+   '(TeX-engine (quote xetex))
+   ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
+   ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
+   '(blink-cursor-mode nil)
+   '(text-mode-hook (quote (text-mode-hook-identify)))
+   '(cua-highlight-region-shift-only t)
+   '(markdown-command "/usr/local/bin/multimarkdown")
+   )
+   
+   ;;(setq inferior-ess-own-frame t)
+   ;;(setq inferior-ess-same-window nil)
+   ;;(setq ess-help-own-frame t)
+   (setq ess-use-auto-complete t)
+   ;; Display ido results vertically, rather than horizontally
+   (setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
+   (defun ido-disable-line-trucation () (set (make-local-variable 'truncate-lines) nil))
+   (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-trucation)
+   
+   (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+   (setq font-latex-fontify-sectioning 'color)
+   (setq reftex-bibliography-commands '("bibliography" "nobibliography" "addbibresource"))   
+   ;;(require 'minimap)
+   ;;; init.el ends here
+   (put 'downcase-region 'disabled nil)
+   (cua-mode)
+   (cua-mode)
+   (add-to-list 'default-frame-alist '(height . 60))
+   (add-to-list 'default-frame-alist '(width . 100))
+   (set-frame-position (selected-frame) 50 0)
+   (global-set-key (kbd "A-C-<left>")  'windmove-left)
+   (global-set-key (kbd "A-C-<right>") 'windmove-right)
+   (setq completion-ignored-extensions
+   '(".o" ".lo" ".mh" ".elc" "~"
+".bin" ".lbin" ".fas1l" ".dvi" ".bbl"
+".glo" ".idx" ".lot", ".bcf"  ".blg"  ".fdb_latexmk"  ".synctex.gz" 
+".rel" ".fls", ".run.xml"))
   (setq ido-ignore-extensions t) 
 #+end_src
    
    
    
-
-
    
    
    
