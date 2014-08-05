@@ -12,7 +12,7 @@ This file provides settings for ESS and R.
 ** Load ESS 
 #+src-name: ess-mode
 #+begin_src emacs-lisp
- (require 'ess-site)
+  (require 'ess-site)
 #+end_src
 ** Coding Hooks
 #+source: ide-ess

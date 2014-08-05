@@ -5,9 +5,8 @@
 ;; This is the first thing to get loaded.
 ;;
 
-;; setq dotfiles-dir (file-name-directory (or (buffer-file-name) load-file-name)))
+(setq dotfiles-dir (file-name-directory (or (buffer-file-name) load-file-name)))
 (setq dotfiles-dir (file-name-directory (or load-file-name (buffer-file-name))))
-(add-to-list 'load-path dotfiles-dir)
 (setq autoload-file (concat dotfiles-dir "loaddefs.el"))
 (setq package-user-dir (concat dotfiles-dir "elpa"))
 (setq custom-file (concat dotfiles-dir "custom.el"))
@@ -19,11 +18,15 @@
 ;; Common Lisp compatability
 (require 'cl-lib)
 
+;; Temporary workaround for eshell bug in 24.3.1
+;; http://zpcat.blogspot.com/2013/08/configure-eshell-mode-after-upgrade.html
+(require 'esh-mode)
+
 ;; Package Locations
 (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
     (let* ((my-lisp-dir "~/.emacs.d/")
            (default-directory my-lisp-dir))
-      (setq load-path (cons my-lisp-dir load-path))
+      ;; (setq load-path (cons my-lisp-dir load-path))
       (normal-top-level-add-subdirs-to-load-path)))
 
  (server-start); start emacs in server mode

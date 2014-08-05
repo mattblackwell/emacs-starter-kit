@@ -267,40 +267,16 @@ globally for later insertion into an Org-mode buffer.  See
 #+begin_src emacs-lisp
 (define-key global-map "\C-cl" 'org-store-link)
 #+end_src
-** Magit
-It's to the point now where I almost can't use git without magit.
-- [[http://zagadka.vm.bytemark.co.uk/magit/][Homepage]]
-- [[http://zagadka.vm.bytemark.co.uk/magit/magit.html][Manual]]
-- [[http://groups.google.com/group/magit/][Mailing list]]
-#+begin_src emacs-lisp
-  (require 'magit)
-  (define-key global-map "\M-\C-g" 'magit-status)
-#+end_src
+** Interface with Ag ("The Silver Searcher")
 
-#+resname:
-: magit-status
+[[https://github.com/ggreer/the_silver_searcher][The Silver Searcher]] is a very fast, smart code search tool, similar to
+ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://github.com/Wilfred/ag.el/#agel][described here]].
 
-** Rgrep
-Rgrep is infinitely useful in multi-file projects.
-
-(see [[elisp:(describe-function 'rgrep)]])
-
-#+begin_src emacs-lisp
-  (define-key global-map "\C-x\C-r" 'rgrep)
-#+end_src
-
-** Interface with Ack
-Ack is "better than grep" and written in Perl. 
-
-#+source: ack
-#+begin_src emacs-lisp
-  (require 'ack-and-a-half)
-  ;; Create shorter aliases
-  (defalias 'ack 'ack-and-a-half)
-  (defalias 'ack-same 'ack-and-a-half-same)
-  (defalias 'ack-find-file 'ack-and-a-half-find-file)
-  (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
-  (define-key global-map "\C-x\C-a" 'ack) 
+#+source: ag
+#+begin_src emacs-lisp 
+  (require 'ag)
+  (define-key global-map "\C-x\C-a" 'ag) 
+  (define-key global-map "\C-x\C-r" 'ag-regexp)
 #+end_src
 
 ** Winner mode
