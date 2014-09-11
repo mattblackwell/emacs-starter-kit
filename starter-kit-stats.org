@@ -75,7 +75,7 @@ This file provides settings for ESS and R.
 	(delete-other-windows)
 	(setq w1 (selected-window))
 	(setq w1name (buffer-name))
-	(setq w2 (split-window w1 nil t))
+	(setq w2 (split-window w1))
 	(R)
 	(set-window-buffer w2 "*R*")
 	(set-window-buffer w1 w1name))))
