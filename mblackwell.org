@@ -285,6 +285,20 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
 #+begin_src emacs-lisp
   (require 'poly-R)
   (require 'poly-markdown)
+  ;;; polymode + markdown
+  (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
+
+  ;;; polymode + R
+  (add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
+  (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
+  (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
+
+(defun rmarkdown-render-file ()
+  "Run rmarkdown on the current file and weave it as MD and HTML."
+  (interactive)
+  (shell-command 
+   (format "Rscript -e 'rmarkdown::render("%s")'" 
+       (shell-quote-argument (buffer-file-name)))))
 #+end_src
 
 ** Local iBuffer Settings
@@ -615,12 +629,15 @@ Some last tweaks.
    (set-frame-position (selected-frame) 50 0)
    (global-set-key (kbd "A-C-<left>")  'windmove-left)
    (global-set-key (kbd "A-C-<right>") 'windmove-right)
+   (global-set-key (kbd "A-C-<up>")  'windmove-up)
+   (global-set-key (kbd "A-C-<down>") 'windmove-down)
    (setq completion-ignored-extensions
    '(".o" ".lo" ".mh" ".elc" "~"
 ".bin" ".lbin" ".fas1l" ".dvi" ".bbl"
 ".glo" ".idx" ".lot", ".bcf"  ".blg"  ".fdb_latexmk"  ".synctex.gz" 
 ".rel" ".fls", ".run.xml"))
   (setq ido-ignore-extensions t) 
+  (setq markdown-enable-math t)
 #+end_src
    
    
