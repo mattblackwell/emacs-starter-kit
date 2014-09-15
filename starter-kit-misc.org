@@ -44,7 +44,7 @@ loading the =zenburn= and =anti-zenburn= themes.
         transient-mark-mode t
       ;;  color-theme-is-global t
         delete-by-moving-to-trash t
-        shift-select-mode nil
+        ;;shift-select-mode nil
         truncate-partial-width-windows nil
         uniquify-buffer-name-style 'forward
         whitespace-style '(trailing lines space-before-tab
