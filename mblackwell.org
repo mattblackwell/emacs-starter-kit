@@ -102,7 +102,7 @@ For use with Yamamoto Mitsuharu's Carbon-patched Emacs. (This is
       (set-frame-parameter f 'fullscreen
                            (if (frame-parameter f 'fullscreen) nil 'fullboth)))
     (global-set-key (kbd "C-c f") 'fullscreen)
-    ;(add-hook 'after-make-frame-functions 'fullscreen)
+    ;;(add-hook 'after-make-frame-functions 'fullscreen)
 #+end_src
 
 *** Mac Key mode
@@ -594,8 +594,6 @@ Some last tweaks.
    ;;(require 'minimap)
    ;;; init.el ends here
    (put 'downcase-region 'disabled nil)
-   (cua-mode)
-   (cua-mode)
    (add-to-list 'default-frame-alist '(height . 60))
    (add-to-list 'default-frame-alist '(width . 100))
    (set-frame-position (selected-frame) 50 0)
@@ -610,6 +608,8 @@ Some last tweaks.
 ".rel" ".fls", ".run.xml"))
   (setq ido-ignore-extensions t) 
   (setq markdown-enable-math t)
+  (fullscreen)
+  (fullscreen)
 #+end_src
    
    
