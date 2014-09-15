@@ -40,8 +40,8 @@ as turning off the sans-serif heading style that AucTeX defaults to.
   (add-hook 'latex-mode-hook 
             (lambda ()
               (set-face-attribute 'font-latex-sectioning-5-face nil :inherit nil :foreground "#b58900")
-              (set-face-attribute 'font-latex-sectioning-0-face nil :inherit nil :height 3)
-              (set-face-attribute 'font-latex-sectioning-1-face nil :inherit nil :height 2)
+              (set-face-attribute 'font-latex-sectioning-0-face nil :height 3)
+              (set-face-attribute 'font-latex-sectioning-1-face nil :height 2)
               (set-face-attribute 'font-latex-sectioning-2-face nil :height 1.5)
               (set-face-attribute 'font-latex-sectioning-3-face nil :height 1.2)
               (set-face-attribute 'font-latex-sectioning-4-face nil :height 1.0)
@@ -158,7 +158,7 @@ Quickly move to spots in the buffer.
   (define-key global-map (kbd "C-o") 'ace-jump-mode)
   
 #+end_src
-  
+
 ** Local LaTeX settings
 *** In-text Smart Quotes (XeLaTeX only)
     Redefine TeX-open-quote and TeX-close-quote to be smart quotes by default. Below, in the local org-mode settings, we'll also map the relevant function to a key we can use in org-mode, too. If you don't use XeLaTeX for processing all your =.tex= files, you should disable this option.
