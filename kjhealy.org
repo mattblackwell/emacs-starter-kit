@@ -206,7 +206,7 @@ Tell RefTeX where the bibliography files are.
 
     ;; Default bibliography
     (setq reftex-default-bibliography
-    '("/Users/mblackwell/Documents/bibs/mb.bib"))
+    '("/Users/mblackwell/workland/mbbibtex/mb.bib"))
 #+end_src
 
 *** Local vc commands

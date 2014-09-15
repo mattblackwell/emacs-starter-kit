@@ -220,8 +220,7 @@ Use a little bit of Mac keys, but not all of them.
   ;;(global-set-key [(alt s)] 'save-buffer)
   ;;(global-set-key [(alt f)] 'isearch-forward)
   ;;(global-set-key [(alt g)] 'isearch-repeat-forward)
-  ;; (global-set-key [(alt z)] 'undo)
-    
+  ;; (global-set-key [(alt z)] 'undo)    
 #+end_src
 
 ** Fetch the contents at a URL, display it raw.
