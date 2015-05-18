@@ -17,6 +17,7 @@ The following packages will be downloaded and installed.
                                 'ac-emmet
                                 'ac-etags
                                 'ac-ispell
+                                'auctex-latexmk
                                 'org-ac
                                 'browse-kill-ring
                                 'css-mode

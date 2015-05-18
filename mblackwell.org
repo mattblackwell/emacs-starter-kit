@@ -604,8 +604,8 @@ Some last tweaks.
    (setq completion-ignored-extensions
    '(".o" ".lo" ".mh" ".elc" "~"
 ".bin" ".lbin" ".fas1l" ".dvi" ".bbl"
-".glo" ".idx" ".lot", ".bcf"  ".blg"  ".fdb_latexmk"  ".synctex.gz" 
-".rel" ".fls", ".run.xml"))
+".glo" ".idx" ".lot" ".bcf"  ".blg"  ".fdb_latexmk"  ".synctex.gz" 
+".rel" ".fls" ".run.xml"))
   (setq ido-ignore-extensions t) 
   (setq markdown-enable-math t)
   (fullscreen)

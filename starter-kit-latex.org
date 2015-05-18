@@ -9,7 +9,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 ** Load Packages
 *** Load AucTeX
 #+begin_src emacs-lisp
-  (load "auctex.el" nil t t)
+  ;(load "auctex.el" nil t t)
 #+end_src
 
 *** Load Preview LaTeX
@@ -165,14 +165,21 @@ We use this (rather than the underscore character) for compatibilty with Pandoc.
 
 #+srcname: latemkdefault
 #+begin_src emacs-lisp
-    (eval-after-load "tex"
-      '(add-to-list 'TeX-command-list '("latexmk" "latexmk -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk"))
-      )
-    (eval-after-load "tex"
-      '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
-      )
-
-  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "xelatexmk")))  
+    ;(eval-after-load "tex"
+    ;  '(add-to-list 'TeX-command-list '("latexmk" "latexmk -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk"))
+    ;  )
+    ;(eval-after-load "tex"
+    ;  '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
+    ;  )
+  
+  ;;(add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "xelatexmk"))) 
+  (require 'auctex-latexmk)
+  (auctex-latexmk-setup) 
+  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "LatexMk"))) 
+  (eval-after-load "tex"
+     '(add-to-list 'TeX-command-list '("pdflatexmk" "latexmk -synctex=1 -shell-escape -pdflatex='pdflatex' %s" TeX-run-latexmk nil t :help "Process file with latexmk"))
+     )
+  
 #+end_src
 
 *** Set a Path to Executables (optional)
