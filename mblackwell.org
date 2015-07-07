@@ -608,6 +608,7 @@ Some last tweaks.
   (setq ido-ignore-extensions t) 
   (setq markdown-enable-math t)
   (setq markdown-indent-on-enter nil)
+  (ess-toggle-underscore nil)
 #+end_src
    
    
