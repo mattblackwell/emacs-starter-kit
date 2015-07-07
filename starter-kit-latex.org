@@ -6,17 +6,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 * Starter Kit LaTeX
   Support for editing LaTeX.
 
-** Load Packages
-*** Load AucTeX
-#+begin_src emacs-lisp
-  (load "auctex.el" nil t t)
-#+end_src
-
-*** Load Preview LaTeX
-#+begin_src emacs-lisp
-  (load "preview.el" nil t t)
-#+end_src
-
+** Load Support Packages
 *** Prettify Math in Buffers
 #+source: latex-pretty-symbols 
 #+begin_src emacs-lisp
@@ -29,18 +19,18 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
   (add-hook 'pandoc-mode-hook 'turn-on-reftex)  ; with Pandoc mode
   (autoload 'reftex-mode     "reftex" "RefTeX Minor Mode" t)
-  (autoload 'turn-on-reftex  "reftex" "RefTeX Minor Mode" nil)
-  (autoload 'reftex-citation "reftex-cite" "Make citation" nil)
+  (autoload 'turn-on-reftex  "reftex" "RefTeX Minor Mode" t)
+  (autoload 'reftex-citation "reftex-cite" "Make citation" t)
   (autoload 'reftex-index-phrase-mode "reftex-index" "Phrase mode" t)
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
   (add-hook 'latex-mode-hook 'turn-on-reftex)   ; with Emacs latex mode
-  
+
   ;; Make RefTeX faster
   (setq reftex-enable-partial-scans t)
   (setq reftex-save-parse-info t)
   (setq reftex-use-multiple-selection-buffers t)
   (setq reftex-plug-into-AUCTeX t)
-  
+
   ;; Make RefTeX work with Org-Mode
   ;; use 'C-c (' instead of 'C-c [' because the latter is already
   ;; defined in orgmode to the add-to-agenda command.
@@ -50,9 +40,9 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
     (file-exists-p (buffer-file-name))
     (reftex-parse-all))
     (define-key org-mode-map (kbd "C-c (") 'reftex-citation))
-  
+
   (add-hook 'org-mode-hook 'org-mode-reftex-setup)
-  
+
   ;; RefTeX formats for biblatex (not natbib), and for pandoc
   (setq reftex-cite-format
         '(
@@ -67,7 +57,7 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
           (?x . "[]{%l}")
           (?X . "{%l}")
           ))
-  
+
   (setq font-latex-match-reference-keywords
         '(("cite" "[{")
           ("cites" "[{}]")
@@ -79,10 +69,10 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
           ("citetitle" "[{") 
           ("citetitles" "[{") 
           ("headlessfullcite" "[{")))
-  
+
   (setq reftex-cite-prompt-optional-args nil)
   (setq reftex-cite-cleanup-optional-args t)
-  
+
 #+end_src
 
 *** Load ebib
@@ -100,6 +90,15 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 #+end_src
 
 ** Configure AucTeX 
+*** Automatic Parsing
+
+#+source: autoparse
+#+begin_src emacs-lisp
+  (setq TeX-parse-self t) ; Enable parse on load.
+  (setq TeX-auto-save t) ; Enable parse on save.
+#+end_src
+
+
 *** Use pdfLaTeX
     - Take this out to compile to DVI, instead.
 #+srcname: pdf-mode
@@ -165,14 +164,21 @@ We use this (rather than the underscore character) for compatibilty with Pandoc.
 
 #+srcname: latemkdefault
 #+begin_src emacs-lisp
-    (eval-after-load "tex"
-      '(add-to-list 'TeX-command-list '("latexmk" "latexmk -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk"))
-      )
-    (eval-after-load "tex"
-      '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
-      )
-
-  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "xelatexmk")))  
+    ;(eval-after-load "tex"
+    ;  '(add-to-list 'TeX-command-list '("latexmk" "latexmk -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk"))
+    ;  )
+    ;(eval-after-load "tex"
+    ;  '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
+    ;  )
+  
+  ;;(add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "xelatexmk"))) 
+  (require 'auctex-latexmk)
+  (auctex-latexmk-setup) 
+  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "LatexMk"))) 
+  (eval-after-load "tex"
+     '(add-to-list 'TeX-command-list '("pdflatexmk" "latexmk -synctex=1 -shell-escape -pdflatex='pdflatex' %s" TeX-run-latexmk nil t :help "Process file with latexmk"))
+     )
+  
 #+end_src
 
 *** Set a Path to Executables (optional)

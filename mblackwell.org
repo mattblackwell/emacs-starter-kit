@@ -2,19 +2,12 @@
 #+OPTIONS: toc:nil num:nil ^:nil
 
 * Starter Kit kjhealy
-This file contains very local customizations---ones that in some cases
+This file contains local customizations---ones that in some cases
 you will not be able to just drop in and use because, e.g., they
 involve references to particular files on my own machine. It's
 included here for completeness, and as and example of the kind of
 things you might put in your own user-specific file.
 
-
-You will also need to change the values for the location of bibtex
- databases, pandoc and orgmode-mobile specified below, and some other
- settings. *Search for 'kjhealy' in this file* to find the paths that
- need to be updated. Change them as needed or delete them if you don't
- need these features. 
- 
 To use the customizations here yourself, /you must change the name of
  this file to match your own user name or system name/. Those are the
  values of the Emacs variables =user-login-name= or =system-name=, so
@@ -24,7 +17,12 @@ To use the customizations here yourself, /you must change the name of
  user-login-name [RET]=. For example, on my system =user-login-name=
  is 'kjhealy', so this file is named =kjhealy.org=, and when Emacs
  starts up with the starter kit it creates the file =kjhealy.el=.
-
+ 
+You will also need to change the values for the location of bibtex
+ databases, pandoc and orgmode-mobile specified below, and some other
+ settings. *Search for 'kjhealy' in this file* to find the paths that
+ need to be updated. Change them as needed or delete them if you don't
+ need these features. 
 
 Finally, the [[*Local%20Org-mode%20XeLaTeX%20Export%20Settings][Local Org-mode XeLaTeX Export Settings]] section below has
  references to fonts that you may not have available on your
@@ -242,11 +240,12 @@ Tell RefTeX where the bibliography files are.
 ** Local Pandoc Support 
 A pandoc menu for markdown and tex files. 
 #+src-name: pandoc_mode
-#+begin_src emacs-lisp
- (setenv "PATH" (concat "/Users/mblackwell/.cabal/bin:" (getenv "PATH")))
- (load "pandoc-mode")
- (add-hook 'markdown-mode-hook 'turn-on-pandoc)
- (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
+#+begin_src emacs-lisp 
+  (setenv "PATH" (concat "/Users/mblackwell/.cabal/bin:" (getenv "PATH")))
+  (load "pandoc-mode")
+  (add-hook 'markdown-mode-hook 'pandoc-mode)
+  (add-hook 'TeX-mode-hook 'pandoc-mode)
+  (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
 #+end_src
 
 ** Local Polymode Support
@@ -264,12 +263,12 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
   (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
   (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
 
-(defun rmarkdown-render-file ()
-  "Run rmarkdown on the current file and weave it as MD and HTML."
-  (interactive)
-  (shell-command 
-   (format "Rscript -e 'rmarkdown::render("%s")'" 
-       (shell-quote-argument (buffer-file-name)))))
+  (defun rmarkdown-render-file ()
+    "Run rmarkdown on the current file and weave it as MD and HTML."
+    (interactive)
+    (shell-command
+     (format "Rscript -e 'rmarkdown::render("%s")'"
+             (shell-quote-argument (buffer-file-name)))))
 #+end_src
 
 ** Local iBuffer Settings

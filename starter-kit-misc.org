@@ -18,7 +18,7 @@ loading the =zenburn= and =anti-zenburn= themes.
 #+begin_src emacs-lisp
   (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
   (setq custom-safe-themes t)
-  (load-theme 'solarized-dark t)
+  (load-theme 'zenburn t)
 #+end_src
 
 ** Window system 
@@ -62,6 +62,7 @@ Thin window dividers and no scroll bars. Toggle with `C-c C-s`.
 
 #+source: minimal-mode-on
 #+begin_src emacs-lisp
+  (setq minimal-zap-menu-bar nil)
   (minimal-mode)
 #+end_src
 
@@ -177,7 +178,7 @@ A nicer modeline.
 
 ** Associate modes with file extensions
 #+begin_src emacs-lisp
-(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
+;(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
 (add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
