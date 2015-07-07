@@ -61,7 +61,8 @@ loading the =zenburn= and =anti-zenburn= themes.
 Thin window dividers and no scroll bars. Toggle with `C-c C-s`.
 
 #+source: minimal-mode-on
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
+  (setq minimal-zap-menu-bar nil)
   (minimal-mode)
 #+end_src
 
