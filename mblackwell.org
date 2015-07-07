@@ -75,7 +75,7 @@ Just maximize the frame. Not true fullscreen
   (global-set-key (kbd "C-c m") 'maximize-frame)  
 #+end_src
 
-**** Option 2 
+**** Option 2
 Fullscreen toggle using maxframe.el. 
 #+source: fullscreen-3
 #+begin_src emacs-lisp :tangle no
@@ -555,7 +555,7 @@ Some last tweaks.
   
   ;; minimize fringe
   (setq-default indicate-empty-lines nil)
-  
+
   ;; Add keybindings for commenting regions of text
   (global-set-key (kbd "C-c ;") 'comment-or-uncomment-region)
   (global-set-key (kbd "M-'") 'comment-or-uncomment-region)
@@ -608,8 +608,7 @@ Some last tweaks.
 ".rel" ".fls" ".run.xml"))
   (setq ido-ignore-extensions t) 
   (setq markdown-enable-math t)
-  (fullscreen)
-  (fullscreen)
+  (setq markdown-indent-on-enter nil)
 #+end_src
    
    
