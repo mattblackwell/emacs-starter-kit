@@ -61,7 +61,7 @@ loading the =zenburn= and =anti-zenburn= themes.
 Thin window dividers and no scroll bars. Toggle with `C-c C-s`.
 
 #+source: minimal-mode-on
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (minimal-mode)
 #+end_src
 
@@ -177,7 +177,7 @@ A nicer modeline.
 
 ** Associate modes with file extensions
 #+begin_src emacs-lisp
-(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
+;(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
 (add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))

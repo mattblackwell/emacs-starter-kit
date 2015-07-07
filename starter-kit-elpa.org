@@ -22,14 +22,14 @@ The following packages will be downloaded and installed.
                                 'browse-kill-ring
                                 'css-mode
                                 'emmet-mode
-                                ;;'exec-path-from-shell
+                                'exec-path-from-shell
                                 'expand-region
                                 ;; 'gist
                                 'hl-line+
                                 'idle-highlight-mode
                                 'inf-ruby
                                 'latex-pretty-symbols
-                                ;; 'mac-key-mode
+                                'mac-key-mode
                                 'magit
                                 'markdown-mode
                                 'maxframe
