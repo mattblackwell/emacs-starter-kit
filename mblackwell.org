@@ -267,7 +267,7 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
     "Run rmarkdown on the current file and weave it as MD and HTML."
     (interactive)
     (shell-command
-     (format "Rscript -e 'rmarkdown::render("%s")'"
+     (format "Rscript -e 'rmarkdown::render(\"%s\")'"
              (shell-quote-argument (buffer-file-name)))))
 #+end_src
 
@@ -285,7 +285,7 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
 		    (filename . "OrgMode")))
 	 ("Web Dev" (or (mode . html-mode)
 			(mode . css-mode)))
-	 ("Magit" (name . "\*magit"))
+	 ;;("Magit" (name . "\*magit"))
 	 ("ESS" (mode . ess-mode))
          ("LaTeX" (mode . latex-mode))
 	 ("Help" (or (name . "\*Help\*")
@@ -609,6 +609,8 @@ Some last tweaks.
   (setq markdown-enable-math t)
   (setq markdown-indent-on-enter nil)
   (ess-toggle-underscore nil)
+  ;; surpress blank buffers in magit
+  (add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
 #+end_src
    
    
