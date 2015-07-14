@@ -266,9 +266,18 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
   (defun rmarkdown-render-file ()
     "Run rmarkdown on the current file and weave it as MD and HTML."
     (interactive)
-    (shell-command
-     (format "Rscript -e 'rmarkdown::render(\"%s\")'"
+    (async-shell-command
+     (format "rmdrender %s"
              (shell-quote-argument (buffer-file-name)))))
+
+
+  (defun rmarkdown-view-pdf ()
+    "View rmarkdown pdf output."
+    (interactive)
+    (async-shell-command
+     (format "/Applications/Skim.app/Contents/SharedSupport/displayline 1 %s"
+             (shell-quote-argument (concat (file-name-sans-extension (buffer-file-name)) ".pdf")))))
+
 #+end_src
 
 ** Local iBuffer Settings
@@ -608,7 +617,7 @@ Some last tweaks.
   (setq ido-ignore-extensions t) 
   (setq markdown-enable-math t)
   (setq markdown-indent-on-enter nil)
-  (ess-toggle-underscore nil)
+  (setq ess-toggle-underscore nil)
   ;; surpress blank buffers in magit
   (add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
 #+end_src
