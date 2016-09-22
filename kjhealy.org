@@ -224,7 +224,6 @@ Tell RefTeX where the bibliography files are.
 A pandoc menu for markdown and tex files. 
 #+src-name: pandoc_mode
 #+begin_src emacs-lisp 
-  (setenv "PATH" (concat "/Users/mblackwell/.cabal/bin:" (getenv "PATH")))
   (load "pandoc-mode")
   (add-hook 'markdown-mode-hook 'pandoc-mode)
   (add-hook 'TeX-mode-hook 'pandoc-mode)

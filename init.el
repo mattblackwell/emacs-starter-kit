@@ -80,7 +80,6 @@
 ;; load up the main file
 ;; org-mode windmove compatibility
 (setq org-replace-disputed-keys t)
-(package-initialize)
 (require 'org)
 (org-babel-load-file (expand-file-name "starter-kit.org" dotfiles-dir))
 
