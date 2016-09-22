@@ -617,7 +617,10 @@ Some last tweaks.
   (setq ido-ignore-extensions t) 
   (setq markdown-enable-math t)
   (setq markdown-indent-on-enter nil)
-  (setq ess-toggle-underscore nil)
+  (setq ess-smart-S-assign-key ";")
+  (ess-toggle-S-assign nil)
+  (ess-toggle-S-assign nil)
+  (ess-toggle-underscore nil) ; leave underscore key alone!
   ;; surpress blank buffers in magit
   (add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
 #+end_src
