@@ -617,7 +617,9 @@ Some last tweaks.
   (setq ido-ignore-extensions t) 
   (setq markdown-enable-math t)
   (setq markdown-indent-on-enter nil)
-  (setq ess-toggle-underscore nil)
+  (setq TeX-auto-local ".auto")
+  (ess-toggle-underscore nil)
+  (setq flychceck-lintr-linters "with_defaults(multiple_dots_linter = NULL)")
   ;; surpress blank buffers in magit
   (add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
 #+end_src
