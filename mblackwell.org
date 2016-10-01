@@ -257,13 +257,16 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
      (format "rmdrender %s"
              (shell-quote-argument (buffer-file-name)))))
 
-
   (defun rmarkdown-view-pdf ()
     "View rmarkdown pdf output."
     (interactive)
     (async-shell-command
      (format "/Applications/Skim.app/Contents/SharedSupport/displayline 1 %s"
              (shell-quote-argument (concat (file-name-sans-extension (buffer-file-name)) ".pdf")))))
+  (add-hook 'poly-markdown+r-mode-hook
+	    '(lambda()
+	       (local-set-key (kbd "C-c C-c r") 'rmarkdown-render-file)
+               (local-set-key (kbd "C-c C-c v") 'rmarkdown-view-pdf)))
 
 #+end_src
 
