@@ -610,7 +610,7 @@ Some last tweaks.
   (setq TeX-auto-local ".auto")
   (setq flychceck-lintr-linters "with_defaults(multiple_dots_linter = NULL)")
   (setq ess-smart-S-assign-key ";")
-  (setq ess-indent-level 2)
+  (setq ess-default-style 'RStudio)
   (ess-toggle-S-assign nil)
   (ess-toggle-S-assign nil)
   (ess-toggle-underscore nil) ; leave underscore key alone!
