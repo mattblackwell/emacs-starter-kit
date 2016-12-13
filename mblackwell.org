@@ -577,7 +577,7 @@ Some last tweaks.
    '(cua-highlight-region-shift-only t)
    '(markdown-command "/usr/local/bin/multimarkdown")
    )
-   
+
    ;;(setq inferior-ess-own-frame t)
    ;;(setq inferior-ess-same-window nil)
    ;;(setq ess-help-own-frame t)
