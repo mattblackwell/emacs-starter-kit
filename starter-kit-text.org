@@ -143,25 +143,7 @@ Markdown mode support.
 #+begin_src emacs-lisp
   (message "Starter Kit Text loaded.")
 #+end_src
-** Deft
-   Deft mode helps organize folders of text notes.
 
-#+srcname deft-mode
-#+begin_src emacs-lisp
-
-(require 'deft)
-(setq deft-extensions '("md" "txt" "org" "markdown" "Markdown" "mdown"))
-(setq deft-default-extension "md")
-(add-to-list 'auto-mode-alist '("/deft/.*\\.txt\\'" . org))
-(setq deft-directory "~/Dropbox/notes")
-(setq deft-recursive t)
-(setq deft-use-filename-as-title t)
-(setq deft-use-filter-string-for-filename t)
-(setq deft-markdown-mode-title-level 2)
-(setq deft-org-mode-title-prefix t)
-(global-set-key (kbd "C-x C-g") 'deft-find-file)
-
-#+end_src
 ** CSV mode
 View and edit CSV files. See [[http://centaur.maths.qmul.ac.uk/Emacs/][the CSV mode homepage]] for more details. From the readme:
 
