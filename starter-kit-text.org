@@ -150,11 +150,13 @@ Markdown mode support.
 #+begin_src emacs-lisp
 
 (require 'deft)
-(setq deft-extensions '("org" "md", "markdown", "Markdown", "mdown"))
+(setq deft-extensions '("md" "txt" "org" "markdown" "Markdown" "mdown"))
+(setq deft-default-extension "md")
 (add-to-list 'auto-mode-alist '("/deft/.*\\.txt\\'" . org))
-(setq deft-directory "~/Dropbox/Org")
+(setq deft-directory "~/Dropbox/notes")
 (setq deft-recursive t)
 (setq deft-use-filename-as-title t)
+(setq deft-use-filter-string-for-filename t)
 (setq deft-markdown-mode-title-level 2)
 (setq deft-org-mode-title-prefix t)
 (global-set-key (kbd "C-x C-g") 'deft-find-file)
