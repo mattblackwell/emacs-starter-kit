@@ -629,6 +629,9 @@ Some last tweaks.
   (setq spaceline-all-the-icons-icon-set-flycheck-slim (quote dots))
   (setq spaceline-all-the-icons-highlight-file-name t)
   (setq ns-use-srgb-colorspace nil)
+
+  ;; fix issue with flycheck freezing on save
+  (setq flycheck-check-syntax-automatically '(idle-change new-line mode-enabled))
 #+end_src
    
    
