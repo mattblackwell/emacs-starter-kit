@@ -171,7 +171,7 @@ Set up AUCTeX to work with the Skim PDF viewer.
     
   (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
   (setq TeX-view-program-list
-       '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+       '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g -r %n %o %b")))
      
     ;; Make emacs aware of multi-file projects
     ;; (setq-default TeX-master nil)
@@ -605,6 +605,7 @@ Some last tweaks.
 ".glo" ".idx" ".lot" ".bcf"  ".blg"  ".fdb_latexmk"  ".synctex.gz" 
 ".rel" ".fls" ".run.xml"))
   (setq ido-ignore-extensions t) 
+  (add-hook 'markdown-mode-hook '(lambda () (local-set-key [tab] 'markdown-cycle)))
   (setq markdown-enable-math t)
   (setq markdown-indent-on-enter nil)
   (setq TeX-auto-local ".auto")
@@ -629,7 +630,6 @@ Some last tweaks.
   (setq spaceline-all-the-icons-icon-set-flycheck-slim (quote dots))
   (setq spaceline-all-the-icons-highlight-file-name t)
   (setq ns-use-srgb-colorspace nil)
-
   ;; fix issue with flycheck freezing on save
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
 #+end_src
