@@ -290,6 +290,8 @@ ack. Install it via homebrew. The emacs interface, `ag-mode`, is [[https://githu
   (winner-mode 1)
   (global-set-key (kbd "C-c <up>") 'winner-undo)
   (global-set-key (kbd "C-c <down>") 'winner-redo)
+  (global-unset-key (kbd "C-c <left>"))
+  (global-unset-key (kbd "C-c <right>"))
 #+end_src
 
 ** Don't Use Suspend Frame

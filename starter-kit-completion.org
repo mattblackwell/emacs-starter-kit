@@ -3,7 +3,7 @@
 Yasnippet is a snippet expansion system for Emacs. It uses short phrases and the tab key to trigger the insertion of frequently-used snippets of code or text in your document. 
 
 ** Load the yasnippet bundle
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
     (add-to-list 'load-path
                    (expand-file-name  "yasnippet"
                                       (expand-file-name "elpa"
@@ -16,7 +16,7 @@ Yasnippet is a snippet expansion system for Emacs. It uses short phrases and the
 
 Load the snippets defined in the package's =./snippets/= directory, and local snippets from the =./local-snippets/= directory. 
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (yas-load-directory (expand-file-name "snippets" dotfiles-dir)) 
 #+end_src
 
@@ -42,7 +42,7 @@ Load the snippets defined in the package's =./snippets/= directory, and local sn
               (null (do-yas-expand)))
           (if (check-expansion)
               (company-complete-common)
-            (indent-for-tab-command)))))
+              (indent-for-tab-command)))))
 
   (global-set-key [tab] 'tab-indent-or-complete)
 
