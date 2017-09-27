@@ -631,7 +631,7 @@ Some last tweaks.
   (setq ns-use-srgb-colorspace nil)
 
   ;; fix issue with flycheck freezing on save
-  (setq flycheck-check-syntax-automatically '(idle-change new-line mode-enabled))
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
 #+end_src
    
    
