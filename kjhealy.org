@@ -41,6 +41,15 @@ OS X ships with BSD's ls command which doesn't have all the features of GNU ls (
 #+source: gnu-ls
 #+begin_src emacs-lisp 
 
+(add-to-list 'load-path "~/.emacs.d/elpa/magit/lisp")
+(require 'magit)
+
+(with-eval-after-load 'info
+  (info-initialize)
+  (add-to-list 'Info-directory-list
+               "~/.emacs.d/elpa/magit/Documentation/"))
+
+
 (setq insert-directory-program (executable-find "gls"))
 
 #+end_src

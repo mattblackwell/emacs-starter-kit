@@ -451,13 +451,6 @@ Located in [[file:starter-kit-lisp.org][starter-kit-lisp]]
 (starter-kit-load "starter-kit-lisp.org")
 #+end_src
 
-*** Starter kit JS
-Located in [[file:starter-kit-js.org][starter-kit-js]]
-
-#+begin_src emacs-lisp
-(starter-kit-load "starter-kit-js.org")
-#+end_src
-
 *** Starter Kit Perl
 Located in [[file:starter-kit-perl.org][starter-kit-perl]]
 
