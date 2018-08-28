@@ -240,34 +240,61 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
 
 #+source: Polymode
 #+begin_src emacs-lisp
-  (require 'poly-R)
-  (require 'poly-markdown)
-  ;;; polymode + markdown
-  (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
+   (require 'poly-R)
+   (require 'poly-markdown)
+   ;;; polymode + markdown
+   (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
 
-  ;;; polymode + R
-  (add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
-  (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
-  (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
+   ;;; polymode + R
+   (add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
+   (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
+   (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
 
-  (defun rmarkdown-render-file ()
-    "Run rmarkdown on the current file and weave it as MD and HTML."
-    (interactive)
-    (async-shell-command
-     (format "rmdrender %s"
-             (shell-quote-argument (buffer-file-name))))
-    (message "Running rmdrender..."))
+   (defun rmarkdown-sentinel (process event)
+     "Watch the rmarkdown process."
+     (let ((buf (process-buffer process))
+           (rmd-buf (process-get process "rmd-buf")))
+       (if (string= event "finished\n") 
+           (message "rmarkdown::render() complete.")
+         (progn
+           (message "Error in rmarkdown::render(), see output.")
+           (display-buffer buf)
+           (switch-to-buffer buf)
+           (recenter -2)
+           (switch-to-buffer rmd-buf)
+         )
+       )
+     )
+   )
+   (defun rmarkdown-render-file ()
+     "Run rmarkdown on the current file and weave it as MD and HTML."
+     (interactive)
+     (require 'comint)
+     (save-excursion
+       (let* ((rmd-buf (buffer-name))
+              (out-buf (get-buffer-create "*rmd-render-output*"))
+             (Rmd-cmd (format "rmarkdown::render(\"%s\")" buffer-file-name)))
+       (message "Running rmarkdown::render on '%s' ..." buffer-file-name)
+       (switch-to-buffer out-buf)
+       (erase-buffer)
+       (comint-mode)
+       (switch-to-buffer rmd-buf) 
+       (start-process "rmdrender" out-buf "Rscript" "-e" Rmd-cmd)
+       (set-process-sentinel (get-process "rmdrender") 'rmarkdown-sentinel)
+       (process-put (get-process "rmdrender") "rmd-buf" rmd-buf)
+       (set-process-filter (get-process "rmdrender") 'comint-output-filter)
+       (set-marker (process-mark (get-process "rmdrender")) (point-max)))))
 
-  (defun rmarkdown-view-pdf ()
-    "View rmarkdown pdf output."
-    (interactive)
-    (async-shell-command
-     (format "/Applications/Skim.app/Contents/SharedSupport/displayline 1 %s"
-             (shell-quote-argument (concat (file-name-sans-extension (buffer-file-name)) ".pdf")))))
-  (add-hook 'poly-markdown+r-mode-hook
-	    '(lambda()
-	       (local-set-key (kbd "A-K") 'rmarkdown-render-file)
-               (local-set-key (kbd "C-c C-c v") 'rmarkdown-view-pdf)))
+   (defun rmarkdown-view-pdf ()
+     "View rmarkdown pdf output."
+     (interactive)
+     (async-shell-command
+      (format "/Applications/Skim.app/Contents/SharedSupport/displayline 1 %s"
+              (shell-quote-argument (concat (file-name-sans-extension (buffer-file-name)) ".pdf")))))
+   (add-hook 'poly-markdown+r-mode-hook
+             '(lambda()
+                (local-set-key (kbd "A-K") 'rmarkdown-render-file)
+                (local-set-key (kbd "C-c C-c v") 'rmarkdown-view-pdf)))
 
 #+end_src
 
@@ -632,6 +659,7 @@ Some last tweaks.
   (setq ns-use-srgb-colorspace nil)
   ;; fix issue with flycheck freezing on save
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (setq auctex-latexmk-inherit-TeX-PDF-mode t)
 #+end_src
    
    
