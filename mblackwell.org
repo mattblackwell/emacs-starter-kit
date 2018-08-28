@@ -253,9 +253,13 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
    (defun rmarkdown-sentinel (process event)
      "Watch the rmarkdown process."
      (let ((buf (process-buffer process))
-           (rmd-buf (process-get process "rmd-buf")))
+           (rmd-buf (process-get process "rmd-buf"))
+           (bufname (process-get process "bufname")))
        (if (string= event "finished\n") 
-           (message "rmarkdown::render() complete.")
+           (progn
+             (message "rmarkdown::render() complete.")
+             (rmarkdown-view-pdf)
+           )
          (progn
            (message "Error in rmarkdown::render(), see output.")
            (display-buffer buf)
@@ -282,6 +286,7 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
        (start-process "rmdrender" out-buf "Rscript" "-e" Rmd-cmd)
        (set-process-sentinel (get-process "rmdrender") 'rmarkdown-sentinel)
        (process-put (get-process "rmdrender") "rmd-buf" rmd-buf)
+       (process-put (get-process "rmdrender") "bufname" buffer-file-name)
        (set-process-filter (get-process "rmdrender") 'comint-output-filter)
        (set-marker (process-mark (get-process "rmdrender")) (point-max)))))
 
