@@ -300,7 +300,8 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
              '(lambda()
                 (local-set-key (kbd "A-K") 'rmarkdown-render-file)
                 (local-set-key (kbd "C-c C-c v") 'rmarkdown-view-pdf)))
-
+   (eval-after-load "poly-markdown+r-minor-mode"
+     '(define-key markdown-mode-map (kbd "A-K") 'rmarkdown-render-file))
 #+end_src
 
 ** Local iBuffer Settings
