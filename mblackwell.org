@@ -641,7 +641,7 @@ Some last tweaks.
   (setq markdown-enable-math t)
   (setq markdown-indent-on-enter nil)
   (setq TeX-auto-local ".auto")
-  (setq flychceck-lintr-linters "with_defaults(multiple_dots_linter = NULL)")
+  (setq flycheck-lintr-linters "with_defaults(multiple_dots_linter = NULL)")
   (setq ess-default-style 'RStudio)
   (ess-toggle-underscore nil) ; leave underscore key alone!
   ;; surpress blank buffers in magit
