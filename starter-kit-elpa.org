@@ -23,12 +23,13 @@ The following packages will be downloaded and installed.
                                 'company-quickhelp
                                 'css-mode
                                 'csv-mode
+                                'ein
+                                'elpy
                                 'emmet-mode
                                 'exec-path-from-shell
                                 'expand-region
                                 'flycheck
                                 'flx-ido
-                                'hl-line+
                                 'idle-highlight-mode
                                 'latex-pretty-symbols
                                 'mac-key-mode
@@ -38,18 +39,14 @@ The following packages will be downloaded and installed.
                                 'multiple-cursors
                                 'pandoc-mode
                                 'polymode
+                                'poly-R
+                                'poly-markdown
                                 'pos-tip
                                 'powerline
-                                'python-mode
-                                'ipython
-                                'jedi
-                                'redo+
                                 'smartparens 
                                 'smex
                                 'solarized-theme
-                                'tango-2-theme
                                 'textmate
-                                'typopunct
                                 'visual-regexp
                                 'yaml-mode
                                 'yasnippet

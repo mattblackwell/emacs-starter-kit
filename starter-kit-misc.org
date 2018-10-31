@@ -42,7 +42,6 @@ loading the =zenburn= and =anti-zenburn= themes.
         font-lock-verbose nil
         inhibit-startup-message t
         transient-mark-mode t
-      ;;  color-theme-is-global t
         delete-by-moving-to-trash t
         ;;shift-select-mode nil
         truncate-partial-width-windows nil

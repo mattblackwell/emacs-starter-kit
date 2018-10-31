@@ -54,7 +54,7 @@ Auto-completion of text and code.
 We use the `:with` keyword to include dabbrev in every backend, which gives us completion from everything that's in the buffer (and other open buffers).
 
 #+source: company-mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp 
 
 ;;Use C-TAB to complete. We put this in eval-after-load 
 ;; because otherwise some modes will try to override our settings.

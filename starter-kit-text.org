@@ -139,11 +139,6 @@ Markdown mode support.
 
 #+end_src
 
-#+source: message-line
-#+begin_src emacs-lisp
-  (message "Starter Kit Text loaded.")
-#+end_src
-
 ** CSV mode
 View and edit CSV files. See [[http://centaur.maths.qmul.ac.uk/Emacs/][the CSV mode homepage]] for more details. From the readme:
 
@@ -177,4 +172,10 @@ In CSV mode, the following commands are available:
 (autoload 'csv-mode "csv-mode"
   "Major mode for editing comma-separated value files." t)
 
+#+end_src
+
+
+#+source: message-line
+#+begin_src emacs-lisp
+  (message "Starter Kit Text loaded.")
 #+end_src
