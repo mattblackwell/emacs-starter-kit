@@ -248,7 +248,6 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
        (if (string= event "finished\n") 
            (progn
              (message "rmarkdown::render() complete.")
-             (rmarkdown-view-pdf)
            )
          (progn
            (message "Error in rmarkdown::render(), see output.")
@@ -286,11 +285,8 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
      (async-shell-command
       (format "/Applications/Skim.app/Contents/SharedSupport/displayline 1 %s"
               (shell-quote-argument (concat (file-name-sans-extension (buffer-file-name)) ".pdf")))))
-   (add-hook 'poly-markdown-mode-hook
-             '(lambda()
-                (local-set-key (kbd "A-K") 'rmarkdown-render-file)
-                (local-set-key (kbd "C-c C-c v") 'rmarkdown-view-pdf)))
    (define-key poly-markdown+R-mode-map (kbd "A-K") 'rmarkdown-render-file)
+   (define-key poly-markdown+R-mode-map (kbd "A-J") (lambda() (interactive)(rmarkdown-view-pdf)))
 #+end_src
 
 ** Local iBuffer Settings
