@@ -23,7 +23,7 @@ The following packages will be downloaded and installed.
                                 'company-quickhelp
                                 'css-mode
                                 'csv-mode
-                                'ein
+                                ;;'ein
                                 'elpy
                                 'emmet-mode
                                 'exec-path-from-shell

@@ -286,6 +286,9 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
       (format "/Applications/Skim.app/Contents/SharedSupport/displayline 1 %s"
               (shell-quote-argument (concat (file-name-sans-extension (buffer-file-name)) ".pdf")))))
    (define-key poly-markdown+R-mode-map (kbd "A-K") 'rmarkdown-render-file)
+   (define-key poly-markdown+R-mode-map [A-S-return] 'polymode-eval-chunk)
+   (define-key poly-markdown+R-mode-map (kbd "A-R") 'polymode-eval-buffer)
+   (define-key poly-markdown+R-mode-map (kbd "A-P") 'polymode-eval-buffer-from-beg-to-point)
    (define-key poly-markdown+R-mode-map (kbd "A-J") (lambda() (interactive)(rmarkdown-view-pdf)))
 #+end_src
 
