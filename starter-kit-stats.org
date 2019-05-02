@@ -108,6 +108,40 @@ Polymode is a package that supports multiple modes inside a single buffer. It is
   (require 'ess-site)
 #+end_src
 
+** Add a Keyboard Shortcut for the Pipe Operator
+
+Assignment in ESS is shift-minus; by extension we'll use M-shift-minus for inserting the `%>%` operator.
+
+#+src-name: ess-pipe-shortcut
+#+begin_src emacs-lisp
+
+(defun my_pipe_operator ()
+  "R/ESS %>% operator"
+  (interactive)
+  (just-one-space 1)
+  (insert "%>%")
+  (reindent-then-newline-and-indent))
+(define-key ess-mode-map (kbd "M-_") 'my_pipe_operator)
+(define-key inferior-ess-mode-map (kbd "M-_") 'my_pipe_operator)
+
+#+end_src
+
+** Add a Keyboard Shortcut for Rmd chunks
+
+#+src-name: rmd-chunk-insert
+#+BEGIN_SRC emacs-lisp
+
+;;;Insert new chunk for Rmarkdown
+(defun kjh-insert-r-chunk (header) 
+  "Insert an r-chunk in markdown mode." 
+  (interactive "sLabel: ") 
+  (insert (concat "```{r " header "}\n\n```")) 
+  (forward-line -1))
+
+(global-set-key (kbd "C-c i") 'kjh-insert-r-chunk)
+
+#+END_SRC
+
 ** Uniquify Buffer Names
 This is useful for when you have buffers with many similar names, as when there are various open files from different folders named =analysis.R= or similar. 
 
