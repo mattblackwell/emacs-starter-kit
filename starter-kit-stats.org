@@ -97,14 +97,14 @@ Polymode is a package that supports multiple modes inside a single buffer. It is
       (call-interactively 'ess-eval-line-and-step)))
   (add-hook 'ess-mode-hook
 	    '(lambda()
-	       (local-set-key [A-return] 'my-ess-eval)))
+	       (local-set-key [A-return] 'ess-eval-region-or-line-and-step)))
   (add-hook 'inferior-ess-mode-hook
 	    '(lambda()
 	       (local-set-key [M-up] 'comint-previous-input)
 	       (local-set-key [M-down] 'comint-next-input)))
  (add-hook 'Rnw-mode-hook 
           '(lambda() 
-             (local-set-key [A-return] 'my-ess-eval))) 
+             (local-set-key [A-return] 'ess-eval-region-or-line-and-step))) 
   (require 'ess-site)
 #+end_src
 

@@ -632,8 +632,7 @@ Some last tweaks.
   (setq markdown-indent-on-enter nil)
   (setq TeX-auto-local ".auto")
   (setq flycheck-lintr-linters "with_defaults(multiple_dots_linter = NULL)")
-  (setq ess-default-style 'RStudio)
-  (ess-toggle-underscore nil) ; leave underscore key alone!
+  (setq ess-style 'RStudio)
   ;; surpress blank buffers in magit
   (add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
   (add-hook 'TeX-mode-hook
