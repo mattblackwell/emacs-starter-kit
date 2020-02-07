@@ -568,6 +568,12 @@ Sometimes useful for getting help on R or Emacs.
 ** Final Custom elements
 Some last tweaks. 
 
+#+srcname: prettify
+#+begin_src emacs-lisp
+(global-prettify-symbols-mode t)
+(setq prettify-symbols-unprettify-at-point 'right-edge)
+#+end_src
+
 #+srcname: final-custom
 #+begin_src emacs-lisp
   ;; Line-spacing tweak (Optimized for PragmataPro)
@@ -582,7 +588,13 @@ Some last tweaks.
   
    ;; Base dir
    (cd "~/")
-   
+
+   ;; ESS loads tex which messes with the prettify stuff, so unload
+   ;; until we need it. 
+   ;;(unload-feature 'latex)
+   ;;(unload-feature 'tex-ispell)
+   ;;(unload-feature 'tex)
+
    ;; custom variables kludge. Why can't I get these to work via setq?
    (custom-set-variables
    ;; custom-set-variables was added by Custom.
@@ -601,7 +613,8 @@ Some last tweaks.
 
    ;;(setq inferior-ess-own-frame t)
    ;;(setq inferior-ess-same-window nil)
-   ;;(setq ess-help-own-frame t)
+  ;;(setq ess-help-own-frame t)
+  (setq inferior-R-args "--no-save --no-restore-data")
    (setq ess-use-auto-complete t)
    ;; Display ido results vertically, rather than horizontally
    (setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
