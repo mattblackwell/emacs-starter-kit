@@ -43,6 +43,7 @@ The following packages will be downloaded and installed.
                                 'poly-markdown
                                 'pos-tip
                                 'powerline
+                                'rainbow-delimiters
                                 'smartparens 
                                 'smex
                                 'solarized-theme

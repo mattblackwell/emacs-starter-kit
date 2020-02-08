@@ -13,6 +13,11 @@ This file provides settings for ESS and R.
 #+src-name: ess-mode
 #+begin_src emacs-lisp
   (require 'ess-site)
+
+;; smart-underscore and ess-smart-S-assign-key have been removed in ESS 19.04 so we need to set them up manually
+  (define-key ess-r-mode-map "_" #'ess-insert-assign)
+  (define-key inferior-ess-r-mode-map "_" #'ess-insert-assign)
+
 #+end_src
 ** Coding Hooks
 #+source: ide-ess
@@ -79,8 +84,8 @@ Polymode is a package that supports multiple modes inside a single buffer. It is
   (setq comint-move-point-for-output t)
   (defun my-ess-start-R ()
     (interactive)
-    (setq bname (ess-gen-proc-buffer-name:project-or-simple "R"))
-    (if (not (member bname (mapcar (function buffer-name) (buffer-list))))
+    (unless (mapcar (lambda (s) (string-match "*R" (buffer-name s))) (buffer-list))
+;;    (unless (string-match "*R" (mapcar (function buffer-name) (buffer-list)))
       (progn
 	(delete-other-windows)
 	(setq w1 (selected-window))

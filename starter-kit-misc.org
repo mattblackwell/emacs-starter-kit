@@ -110,7 +110,6 @@ If launching Emacs as in windowing system, show the menu. If launching in a tty/
 
 #+end_src
 
-
 ** ido mode and flx-ido
 ido-mode is like magic pixie dust!
 #+srcname: starter-kit-loves-ido-mode
@@ -198,4 +197,9 @@ A nicer modeline.
 #+source: message-line
 #+begin_src emacs-lisp
   (message "Starter Kit Misc loaded.")
+#+end_src
+** Rainbow delimiters in R and elsewere
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'ess-mode-hook #'rainbow-delimiters-mode)
 #+end_src
