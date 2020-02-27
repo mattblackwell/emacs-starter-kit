@@ -15,8 +15,8 @@ This file provides settings for ESS and R.
   (require 'ess-site)
 
 ;; smart-underscore and ess-smart-S-assign-key have been removed in ESS 19.04 so we need to set them up manually
-  (define-key ess-r-mode-map "_" #'ess-insert-assign)
-  (define-key inferior-ess-r-mode-map "_" #'ess-insert-assign)
+  ;(define-key ess-r-mode-map "_" #'ess-insert-assign)
+  ;(define-key inferior-ess-r-mode-map "_" #'ess-insert-assign)
 
 #+end_src
 ** Coding Hooks
