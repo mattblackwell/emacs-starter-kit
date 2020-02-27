@@ -171,7 +171,7 @@ We use this (rather than the underscore character) for compatibilty with Pandoc.
      '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex -pdf %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
      )
   
-  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "xelatexmk")))   
+  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))   
 #+end_src
 
 *** Set a Path to Executables (optional)
