@@ -240,56 +240,77 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
 
 #+source: Polymode
 #+begin_src emacs-lisp
-   (defun rmarkdown-sentinel (process event)
-     "Watch the rmarkdown process."
-     (let ((buf (process-buffer process))
-           (rmd-buf (process-get process "rmd-buf"))
-           (bufname (process-get process "bufname")))
-       (if (string= event "finished\n") 
-           (progn
-             (message "rmarkdown::render() complete.")
-           )
-         (progn
-           (message "Error in rmarkdown::render(), see output.")
-           (display-buffer buf)
-           (switch-to-buffer buf)
-           (recenter -2)
-           (switch-to-buffer rmd-buf)
-         )
-       )
-     )
-   )
-   (defun rmarkdown-render-file ()
-     "Run rmarkdown on the current file and weave it as MD and HTML."
-     (interactive)
-     (require 'comint)
-     (save-excursion
-       (let* ((rmd-buf (buffer-name))
-              (out-buf (get-buffer-create "*rmd-render-output*"))
-             (Rmd-cmd (format "rmarkdown::render(\"%s\")" buffer-file-name)))
-       (message "Running rmarkdown::render on '%s' ..." buffer-file-name)
-       (switch-to-buffer out-buf)
-       (erase-buffer)
-       (comint-mode)
-       (switch-to-buffer rmd-buf) 
-       (start-process "rmdrender" out-buf "Rscript" "-e" Rmd-cmd)
-       (set-process-sentinel (get-process "rmdrender") 'rmarkdown-sentinel)
-       (process-put (get-process "rmdrender") "rmd-buf" rmd-buf)
-       (process-put (get-process "rmdrender") "bufname" buffer-file-name)
-       (set-process-filter (get-process "rmdrender") 'comint-output-filter)
-       (set-marker (process-mark (get-process "rmdrender")) (point-max)))))
-
-   (defun rmarkdown-view-pdf ()
-     "View rmarkdown pdf output."
-     (interactive)
-     (async-shell-command
-      (format "/Applications/Skim.app/Contents/SharedSupport/displayline 1 %s"
-              (shell-quote-argument (concat (file-name-sans-extension (buffer-file-name)) ".pdf")))))
-   (define-key poly-markdown+R-mode-map (kbd "A-K") 'rmarkdown-render-file)
-   (define-key poly-markdown+R-mode-map [A-S-return] 'polymode-eval-chunk)
-   (define-key poly-markdown+R-mode-map (kbd "A-R") 'polymode-eval-buffer)
-   (define-key poly-markdown+R-mode-map (kbd "A-P") 'polymode-eval-buffer-from-beg-to-point)
-   (define-key poly-markdown+R-mode-map (kbd "A-J") (lambda() (interactive)(rmarkdown-view-pdf)))
+  (defun rmarkdown-sentinel (process event)
+    "Watch the rmarkdown process."
+    (let ((buf (process-buffer process))
+          (rmd-buf (process-get process "rmd-buf"))
+          (bufname (process-get process "bufname")))
+      (if (string= event "finished\n") 
+          (progn
+            (message "rmarkdown::render() complete.")
+          )
+        (progn
+          (message "Error in rmarkdown::render(), see output.")
+          (display-buffer buf)
+          (switch-to-buffer buf)
+          (recenter -2)
+          (switch-to-buffer rmd-buf)
+        )
+      )
+    )
+  )
+  (defun rmarkdown-render-file ()
+    "Run rmarkdown on the current file and weave it as MD and HTML."
+    (interactive)
+    (require 'comint)
+    (save-excursion
+      (let* ((rmd-buf (buffer-name))
+             (out-buf (get-buffer-create "*rmd-render-output*"))
+            (Rmd-cmd (format "rmarkdown::render(\"%s\")" buffer-file-name)))
+      (message "Running rmarkdown::render on '%s' ..." buffer-file-name)
+      (switch-to-buffer out-buf)
+      (erase-buffer)
+      (comint-mode)
+      (switch-to-buffer rmd-buf) 
+      (start-process "rmdrender" out-buf "Rscript" "-e" Rmd-cmd)
+      (set-process-sentinel (get-process "rmdrender") 'rmarkdown-sentinel)
+      (process-put (get-process "rmdrender") "rmd-buf" rmd-buf)
+      (process-put (get-process "rmdrender") "bufname" buffer-file-name)
+      (set-process-filter (get-process "rmdrender") 'comint-output-filter)
+      (set-marker (process-mark (get-process "rmdrender")) (point-max)))))
+  (defun ess-r-eval-in-compile-buffer (expr)
+    "Evalate R expression EXPR in a standalone `compilation-mode' buffer."
+    (let* ((procname inferior-ess-r-program-name)
+           (command (format "%s --slave --no-readline -e \"%s\"" procname expr)))
+      (compilation-start command nil
+                         (lambda (name-of-mode)
+                           (concat "*" (downcase name-of-mode) "*"))
+                         ess-r-error-regexp-alist)))
+  (defun my-ess-rmarkdown-render ()
+    (interactive)
+    (let ((cmd        
+           (format "rmarkdown::render('%s')" buffer-file-name)))
+        (ess-r-eval-in-compile-buffer cmd))
+  (add-hook 'compilation-finish-functions
+            (lambda (buf str)
+              (if (null (string-match ".*exited abnormally.*" str))
+                  ;;no errors, make the compilation window go away in a few seconds
+                  (progn
+                    (run-at-time
+                     "2 sec" nil 'delete-windows-on
+                     (get-buffer-create "*compilation*"))
+                    (message "No Compilation Errors!"))))))
+  (defun rmarkdown-view-pdf ()
+    "View rmarkdown pdf output."
+    (interactive)
+    (async-shell-command
+     (format "/Applications/Skim.app/Contents/SharedSupport/displayline 1 %s"
+             (shell-quote-argument (concat (file-name-sans-extension (buffer-file-name)) ".pdf")))))
+  (define-key poly-markdown+R-mode-map (kbd "A-K") 'my-ess-rmarkdown-render)
+  (define-key poly-markdown+R-mode-map [A-S-return] 'polymode-eval-chunk)
+  (define-key poly-markdown+R-mode-map (kbd "A-R") 'polymode-eval-buffer)
+  (define-key poly-markdown+R-mode-map (kbd "A-P") 'polymode-eval-buffer-from-beg-to-point)
+  (define-key poly-markdown+R-mode-map (kbd "A-J") (lambda() (interactive)(rmarkdown-view-pdf)))
 #+end_src
 
 ** Local iBuffer Settings
@@ -589,32 +610,20 @@ Some last tweaks.
    ;; Base dir
    (cd "~/")
 
-   ;; ESS loads tex which messes with the prettify stuff, so unload
-   ;; until we need it. 
-   ;;(unload-feature 'latex)
-   ;;(unload-feature 'tex-ispell)
-   ;;(unload-feature 'tex)
-
    ;; custom variables kludge. Why can't I get these to work via setq?
    (custom-set-variables
    ;; custom-set-variables was added by Custom.
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
-   ;;'(LaTeX-XeTeX-command "xelatex -synctex=1")
-   ;;'(TeX-engine (quote xetex))
-   ;; '(TeX-view-program-list (quote (("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
-   ;; '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
    '(blink-cursor-mode nil)
    '(text-mode-hook (quote (text-mode-hook-identify)))
    '(cua-highlight-region-shift-only t)
    '(markdown-command "/usr/local/bin/multimarkdown")
+   '(markdown-enable-math t)
    )
 
-   ;;(setq inferior-ess-own-frame t)
-   ;;(setq inferior-ess-same-window nil)
-  ;;(setq ess-help-own-frame t)
-  (setq inferior-R-args "--no-save --no-restore-data")
+   (setq inferior-R-args "--no-save --no-restore-data")
    (setq ess-use-auto-complete t)
    ;; Display ido results vertically, rather than horizontally
    (setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
@@ -627,9 +636,8 @@ Some last tweaks.
    ;;(require 'minimap)
    ;;; init.el ends here
    (put 'downcase-region 'disabled nil)
-   (add-to-list 'default-frame-alist '(height . 60))
-   (add-to-list 'default-frame-alist '(width . 100))
-   (set-frame-position (selected-frame) 50 0)
+   ;;(add-to-list 'default-frame-alist '(height . 60))
+   ;;(add-to-list 'default-frame-alist '(width . 100))
    (global-set-key (kbd "A-C-<left>")  'windmove-left)
    (global-set-key (kbd "A-C-<right>") 'windmove-right)
    (global-set-key (kbd "A-C-<up>")  'windmove-up)
@@ -641,17 +649,34 @@ Some last tweaks.
 ".rel" ".fls" ".run.xml"))
   (setq ido-ignore-extensions t) 
   (add-hook 'markdown-mode-hook '(lambda () (local-set-key [tab] 'markdown-cycle)))
-  (setq markdown-enable-math t)
   (setq markdown-indent-on-enter nil)
   (setq TeX-auto-local ".auto")
-  (setq flycheck-lintr-linters "with_defaults(multiple_dots_linter = NULL)")
+  (setq flycheck-lintr-linters "with_defaults(object_name_linter=NULL)")
   (setq ess-style 'RStudio)
+  (setq compilation-scroll-output t)
+  (setq ess-eval-visibly t)
   ;; surpress blank buffers in magit
   (add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
   (add-hook 'TeX-mode-hook
 	    '(lambda()
 	       (local-set-key (kbd "A-K") 'TeX-command-run-all)))
-
+  (add-to-list 'display-buffer-alist
+      `(("*R Dired"
+         (display-buffer-reuse-window display-buffer-in-side-window)
+         (side . right)
+         (slot . -1)
+         (window-width . 0.33)
+         (reusable-frames . nil))
+        ("*R"
+         (display-buffer-reuse-window display-buffer-at-bottom)
+         (window-width . 0.5)
+         (reusable-frames . nil))
+        ("*Help"
+         (display-buffer-reuse-window display-buffer-in-side-window)
+         (side . right)
+         (slot . 1)
+         (window-width . 0.33)
+         (reusable-frames . nil))))
   ;; spaceline/all-the-icons
   ;; install fonts from https://github.com/domtronn/all-the-icons.el
   (require 'spaceline)

@@ -135,7 +135,8 @@ Markdown mode support.
      )  
    (global-set-key "\C-co" 'markdown-preview-file) 
 
-  (add-hook 'markdown-mode-hook 'latex-unicode-simplified)
+  ;; now using prettify-symbols-mode
+  ;;(add-hook 'markdown-mode-hook 'latex-unicode-simplified)
 
 #+end_src
 

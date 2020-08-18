@@ -168,7 +168,7 @@ We use this (rather than the underscore character) for compatibilty with Pandoc.
      '(add-to-list 'TeX-command-list '("latexmk" "latexmk -synctex=1 -shell-escape -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk"))
      )
     (eval-after-load "tex"
-     '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -synctex=1 -shell-escape -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
+     '(add-to-list 'TeX-command-list '("xelatexmk" "latexmk -pdf -pdflatex=xelatex -synctex=1 -shell-escape %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))
      )
   
   (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))   
