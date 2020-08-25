@@ -685,6 +685,17 @@ Some last tweaks.
   (spaceline-all-the-icons-theme)
   (spaceline-toggle-all-the-icons-buffer-path-off)
   (spaceline-toggle-all-the-icons-time-off)
+  ;; text-mode and thus markdown-mode have $ as a word in
+  ;; in the syntax table, which messes up smartparens regexp
+  ;; the next line fixes that then the following add smartparens
+  (add-hook 'markdown-mode-hook (lambda () (modify-syntax-entry ?$ "$")))
+  (sp-with-modes 'markdown-mode 
+    (sp-local-pair "$" "$")
+    (sp-local-pair "\\[" "\\]")
+  )
+  ;; these help with a nasty auctex/smartparens bug
+  (function-put 'TeX-insert-quote 'delete-selection nil)
+  (function-put 'TeX-insert-dollar 'delete-selection nil)
   (setq powerline-text-scale-factor 1.1)
   (setq spaceline-all-the-icons-icon-set-flycheck-slim (quote dots))
   (setq spaceline-all-the-icons-highlight-file-name t)
@@ -692,6 +703,8 @@ Some last tweaks.
   ;; fix issue with flycheck freezing on save
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   (setq auctex-latexmk-inherit-TeX-PDF-mode t)
+  (global-set-key [(H left)] 'beginning-of-buffer)
+  (global-set-key [(H right)] 'end-of-buffer)
 #+end_src
    
    
