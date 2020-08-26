@@ -591,8 +591,10 @@ Some last tweaks.
 
 #+srcname: prettify
 #+begin_src emacs-lisp
-(global-prettify-symbols-mode t)
-(setq prettify-symbols-unprettify-at-point 'right-edge)
+;; alas, pretty broken with poly-markdown
+;;(global-prettify-symbols-mode t)
+;;(add-hook 'TeX-mode-hook 'prettify-symbols-mode)
+;;(setq prettify-symbols-unprettify-at-point 'right-edge)
 #+end_src
 
 #+srcname: final-custom
