@@ -280,26 +280,34 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
       (set-marker (process-mark (get-process "rmdrender")) (point-max)))))
   (defun ess-r-eval-in-compile-buffer (expr)
     "Evalate R expression EXPR in a standalone `compilation-mode' buffer."
+    (window-configuration-to-register :pre-ess-compile)
     (let* ((procname inferior-ess-r-program-name)
            (command (format "%s --slave --no-readline -e \"%s\"" procname expr)))
       (compilation-start command nil
                          (lambda (name-of-mode)
                            (concat "*" (downcase name-of-mode) "*"))
-                         ess-r-error-regexp-alist)))
+                         ess-r-error-regexp-alist))
+    (add-hook 'compilation-finish-functions
+          (lambda (buf str)
+            (if (null (string-match ".*exited abnormally.*" str))
+                ;;no errors, make the compilation window go away in a few seconds
+                (progn
+                  (jump-to-register :pre-ess-compile)
+                  (message "No Compilation Errors!"))))))
   (defun my-ess-rmarkdown-render ()
     (interactive)
     (let ((cmd        
            (format "rmarkdown::render('%s')" buffer-file-name)))
-        (ess-r-eval-in-compile-buffer cmd))
-  (add-hook 'compilation-finish-functions
-            (lambda (buf str)
-              (if (null (string-match ".*exited abnormally.*" str))
-                  ;;no errors, make the compilation window go away in a few seconds
-                  (progn
-                    (run-at-time
-                     "2 sec" nil 'delete-windows-on
-                     (get-buffer-create "*compilation*"))
-                    (message "No Compilation Errors!"))))))
+        (ess-r-eval-in-compile-buffer cmd)))
+
+  (defun rmarkdown-view-html ()
+    "View rmarkdown::render html output."
+    (interactive)
+    (async-shell-command
+     (format "%s -open %s"
+         (shell-quote-argument "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+        (shell-quote-argument (concat (file-name-sans-extension (buffer-file-name)) ".html")))))
+
   (defun rmarkdown-view-pdf ()
     "View rmarkdown pdf output."
     (interactive)
@@ -307,7 +315,9 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
      (format "/Applications/Skim.app/Contents/SharedSupport/displayline 1 %s"
              (shell-quote-argument (concat (file-name-sans-extension (buffer-file-name)) ".pdf")))))
   (define-key poly-markdown+R-mode-map (kbd "A-K") 'my-ess-rmarkdown-render)
+  (define-key poly-markdown+R-mode-map (kbd "A-H") 'rmarkdown-view-html)
   (define-key poly-markdown+R-mode-map [A-S-return] 'polymode-eval-chunk)
+  (define-key poly-markdown+R-mode-map [A-M-i] 'kjh-insert-r-chunk)
   (define-key poly-markdown+R-mode-map (kbd "A-R") 'polymode-eval-buffer)
   (define-key poly-markdown+R-mode-map (kbd "A-P") 'polymode-eval-buffer-from-beg-to-point)
   (define-key poly-markdown+R-mode-map (kbd "A-J") (lambda() (interactive)(rmarkdown-view-pdf)))
