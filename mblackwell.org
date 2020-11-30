@@ -278,6 +278,7 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
       (process-put (get-process "rmdrender") "bufname" buffer-file-name)
       (set-process-filter (get-process "rmdrender") 'comint-output-filter)
       (set-marker (process-mark (get-process "rmdrender")) (point-max)))))
+
   (defun ess-r-eval-in-compile-buffer (expr)
     "Evalate R expression EXPR in a standalone `compilation-mode' buffer."
     (window-configuration-to-register :pre-ess-compile)
@@ -287,13 +288,13 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
                          (lambda (name-of-mode)
                            (concat "*" (downcase name-of-mode) "*"))
                          ess-r-error-regexp-alist))
-    (add-hook 'compilation-finish-functions
+    (add-hook 'compilation-finish-functions 
           (lambda (buf str)
             (if (null (string-match ".*exited abnormally.*" str))
                 ;;no errors, make the compilation window go away in a few seconds
                 (progn
                   (jump-to-register :pre-ess-compile)
-                  (message "No Compilation Errors!"))))))
+                  (message "No Compilation Errors!")))))) ;; last two makes this local?
   (defun my-ess-rmarkdown-render ()
     (interactive)
     (let ((cmd        
@@ -305,7 +306,6 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
     (interactive)
     (async-shell-command
      (format "%s -open %s"
-         (shell-quote-argument "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
         (shell-quote-argument (concat (file-name-sans-extension (buffer-file-name)) ".html")))))
 
   (defun rmarkdown-view-pdf ()
@@ -638,9 +638,9 @@ Some last tweaks.
    (setq inferior-R-args "--no-save --no-restore-data")
    (setq ess-use-auto-complete t)
    ;; Display ido results vertically, rather than horizontally
-   (setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
-   (defun ido-disable-line-trucation () (set (make-local-variable 'truncate-lines) nil))
-   (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-trucation)
+   ;;(setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
+   ;;(defun ido-disable-line-trucation () (set (make-local-variable 'truncate-lines) nil))
+   ;;(add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-trucation)
    
    (add-hook 'LaTeX-mode-hook 'flyspell-mode)
    (setq font-latex-fontify-sectioning 'color)
@@ -717,6 +717,13 @@ Some last tweaks.
   (setq auctex-latexmk-inherit-TeX-PDF-mode t)
   (global-set-key [(H left)] 'beginning-of-buffer)
   (global-set-key [(H right)] 'end-of-buffer)
+
+  ;; use fido mode 
+  (fido-mode)
+  (require 'icomplete-vertical)
+  (icomplete-vertical-mode)
+  (require 'orderless)
+  (setq completion-styles '(orderless))
 #+end_src
    
    
