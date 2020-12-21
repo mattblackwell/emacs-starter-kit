@@ -631,8 +631,9 @@ Some last tweaks.
    '(blink-cursor-mode nil)
    '(text-mode-hook (quote (text-mode-hook-identify)))
    '(cua-highlight-region-shift-only t)
-   '(markdown-command "/usr/local/bin/multimarkdown")
+   '(markdown-command "/usr/local/bin/pandoc")
    '(markdown-enable-math t)
+   '(icomplete-vertical-separator "\n  ")
    )
 
    (setq inferior-R-args "--no-save --no-restore-data")
@@ -719,6 +720,7 @@ Some last tweaks.
   (global-set-key [(H right)] 'end-of-buffer)
 
   ;; use fido mode 
+  (setq icomplete-show-matches-on-no-input t)
   (fido-mode)
   (require 'icomplete-vertical)
   (icomplete-vertical-mode)
