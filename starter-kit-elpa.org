@@ -44,6 +44,8 @@ The following packages will be downloaded and installed.
                                 'pos-tip
                                 'powerline
                                 'rainbow-delimiters
+                                'selectrum
+                                'selectrum-prescient
                                 'smartparens 
                                 'smex
                                 'solarized-theme
