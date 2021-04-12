@@ -274,20 +274,24 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
 
   (defun ess-r-eval-in-compile-buffer (expr)
     "Evalate R expression EXPR in a standalone `compilation-mode' buffer."
-    (window-configuration-to-register :pre-ess-compile)
     (let* ((procname inferior-ess-r-program-name)
            (command (format "%s --slave --no-readline -e \"%s\"" procname expr)))
       (compilation-start command nil
                          (lambda (name-of-mode)
                            (concat "*" (downcase name-of-mode) "*"))
-                         ess-r-error-regexp-alist))
-    (add-hook 'compilation-finish-functions 
-          (lambda (buf str)
-            (if (null (string-match ".*exited abnormally.*" str))
-                ;;no errors, make the compilation window go away in a few seconds
-                (progn
-                  (jump-to-register :pre-ess-compile)
-                  (message "No Compilation Errors!")))))) ;; last two makes this local?
+                         ess-r-error-regexp-alist)))
+  (add-hook 'compilation-finish-functions
+    (lambda (buf str)
+      (if (and (not (string= (buffer-name buf) "*grep*"))
+               (null (string-match ".*exited abnormally.*" str)))
+
+            ;;no errors, make the compilation window go away in a few seconds
+            (progn
+              (run-at-time
+               "2 sec" nil 'delete-windows-on
+               (get-buffer-create "*compilation*"))
+              (message "No Compilation Errors!")))))
+
   (defun my-ess-rmarkdown-render ()
     (interactive)
     (let ((cmd        
@@ -660,9 +664,10 @@ Some last tweaks.
   (setq flycheck-lintr-linters "with_defaults(object_name_linter=NULL)")
   (setq ess-style 'RStudio)
   (setq compilation-scroll-output t)
-  (setq ess-eval-visibly t)
+  (setq ess-eval-visibly 'nowait)
   ;; surpress blank buffers in magit
   (add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
+  (add-to-list 'display-buffer-alist (cons "\\*compilation\\*.*" (cons #'display-buffer-same-window nil)))
   (add-hook 'TeX-mode-hook
 	    '(lambda()
 	       (local-set-key (kbd "A-K") 'TeX-command-run-all)))
