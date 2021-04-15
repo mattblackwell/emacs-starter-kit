@@ -667,7 +667,12 @@ Some last tweaks.
   (setq ess-eval-visibly 'nowait)
   ;; surpress blank buffers in magit
   (add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
-  (add-to-list 'display-buffer-alist (cons "\\*compilation\\*.*" (cons #'display-buffer-same-window nil)))
+  (add-to-list 'display-buffer-alist
+               `(("\\*compilation\\*.*"
+                  (display-buffer-in-side-window)
+                  (side . bottom)
+                  (window-height . 0.33)
+                  )))
   (add-hook 'TeX-mode-hook
 	    '(lambda()
 	       (local-set-key (kbd "A-K") 'TeX-command-run-all)))
