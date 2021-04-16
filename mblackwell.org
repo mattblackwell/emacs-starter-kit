@@ -666,33 +666,31 @@ Some last tweaks.
   (setq compilation-scroll-output t)
   (setq ess-eval-visibly 'nowait)
   ;; surpress blank buffers in magit
-  (add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
-  (add-to-list 'display-buffer-alist
-               `(("\\*compilation\\*.*"
-                  (display-buffer-in-side-window)
-                  (side . bottom)
-                  (window-height . 0.33)
-                  )))
+  ;;(add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
   (add-hook 'TeX-mode-hook
 	    '(lambda()
 	       (local-set-key (kbd "A-K") 'TeX-command-run-all)))
-  (add-to-list 'display-buffer-alist
-      `(("*R Dired"
+  (setq display-buffer-alist
+      `(("\\*R Dired"
          (display-buffer-reuse-window display-buffer-in-side-window)
          (side . right)
          (slot . -1)
          (window-width . 0.33)
          (reusable-frames . nil))
-        ("*R"
+        ("\\*R"
          (display-buffer-reuse-window display-buffer-at-bottom)
          (window-width . 0.5)
          (reusable-frames . nil))
-        ("*Help"
+        ("\\*Help"
          (display-buffer-reuse-window display-buffer-in-side-window)
          (side . right)
          (slot . 1)
          (window-width . 0.33)
-         (reusable-frames . nil))))
+         (reusable-frames . nil))
+        ("\\*compilation\\*.*"
+         (display-buffer-in-side-window)
+         (side . bottom)
+         (window-height . 0.33))))
   ;; spaceline/all-the-icons
   ;; install fonts from https://github.com/domtronn/all-the-icons.el
   (require 'spaceline)
