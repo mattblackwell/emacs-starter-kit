@@ -299,11 +299,16 @@ Polymode is a new package that supports multiple modes inside a single buffer. I
         (ess-r-eval-in-compile-buffer cmd)))
 
   (defun rmarkdown-view-html ()
-    "View rmarkdown::render html output."
+    "View rmarkdown::render html output in Marked 2. Uses md output from rmarkdown if available."
     (interactive)
+    (let* ((mdfile
+            (concat (file-name-sans-extension (buffer-file-name)) ".md"))
+      (file
+       (if (not (file-exists-p mdfile)) (buffer-file-name) mdfile)))
+      
     (async-shell-command
-     (format "%s -open %s"
-        (shell-quote-argument (concat (file-name-sans-extension (buffer-file-name)) ".html")))))
+     (format "open -a /Applications/Marked\\ 2.app %s"
+             (shell-quote-argument file)))))
 
   (defun rmarkdown-view-pdf ()
     "View rmarkdown pdf output."
